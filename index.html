@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Миттєва Безкоштовна Професійна Допомога Експертного Фахівця ШІ: лікар, ветеринар та перекладач | AskExpertAI</title>
+    <style>
+	    :root {
+            --bg-color: #e9ecef;
+            --active-tab: #ffffff;
+            --inactive-tab: #ced4da;
+            --border-color: #adb5bd;
+            --text-color: #212529;
+            --accent-color: #2b2d42;
+            --user-msg: #007bff;
+        }
+
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important;
+		}
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .browser-container {
+            width: 95%;
+            max-width: 1000px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs-header {
+            display: flex;
+            padding-left: 0;
+            z-index: 2;
+        }
+
+        .tab {
+            padding: 12px 30px;
+            background: var(--inactive-tab);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            cursor: pointer;
+            position: relative;
+            margin-right: -1px;
+            transition: background 0.2s ease;
+            user-select: none;
+            font-size: 14px;
+            color: #495057;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab.active {
+            background: var(--active-tab);
+            z-index: 10;
+            color: var(--text-color);
+            font-weight: 700;
+            border-top: 3px solid var(--accent-color);
+        }
+
+        .tab:hover:not(.active) {
+            background: #dee2e6;
+        }
+
+        .chat-window {
+            flex: 1;
+            background: var(--active-tab);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 5;
+            margin-top: -1px;
+			height: 80%;
+        }
+
+        .messages-container {
+            flex: initial;
+			height: calc(100vh - 40vh);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #ffffff;
+            background-image: linear-gradient(#f8f9fa 1px, transparent 1px), linear-gradient(90deg, #f8f9fa 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 15px;
+            line-height: 1.6;
+            font-size: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+        }
+
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            font-size: 15px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            z-index: 2;
+        }
+
+        button {
+            padding: 0 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: 1px solid var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            margin-left: -1px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            background-color: var(--inactive-tab);
+            border-color: var(--border-color);
+            cursor: not-allowed;
+        }
+		.modal-overlay {
+			position: fixed;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background: rgba(0, 0, 0, 0.85);
+			display: flex; justify-content: center; align-items: center;
+			z-index: 9999;
+			backdrop-filter: blur(5px);
+			display: none;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 30px;
+			border-radius: 15px;
+			max-width: 500px;
+			width: 90%;
+			text-align: left;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+		}
+
+		.modal-content h2 { color: #2c3e50; margin-top: 0; }
+		.modal-content ul { padding-left: 20px; color: #555; }
+		.modal-content li { margin-bottom: 10px; }
+
+		.btn-accept {
+			width: 100%;
+			padding: 12px;
+			background: #3498db;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: bold;
+			font-size: 1.1em;
+			margin-top: 15px;
+		}
+
+		.btn-accept:hover { background: #2980b9; }
+				
+		.typing-indicator {
+			display: flex;
+			gap: 4px;
+			padding: 5px 10px;
+			align-items: center;
+		}
+
+		.typing-indicator span {
+			width: 6px;
+			height: 6px;
+			background-color: #7f8c8d;
+			border-radius: 50%;
+			display: inline-block;
+			animation: typing 1.4s infinite ease-in-out both;
+		}
+
+		.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+		.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+		@keyframes typing {
+			0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+			40% { transform: scale(1); opacity: 1; }
+		}
+
+		.message.ai.loading {
+			background-color: #f1f2f6;
+			border: 1px solid #e1e1e1;
+			min-width: 60px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		:root {
+			--safe-area-bottom: env(safe-area-inset-bottom, 0px);
+		}
+
+		body {
+			height: 100dvh; 
+			overflow: hidden;
+		}
+
+		.browser-container {
+			width: 100%;
+			max-width: 1000px;
+			height: 100dvh;
+			padding: 0;
+		}
+
+		.tabs-header {
+			flex-wrap: nowrap;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+
+		.tabs-header::-webkit-scrollbar {
+			display: none;
+		}
+
+		.tab {
+			flex: 1;
+			text-align: center;
+			padding: 15px 10px;
+			font-size: 12px;
+			white-space: nowrap;
+		}
+
+		.chat-window {
+			height: 100%;
+			box-shadow: none;
+			border-left: none;
+			border-right: none;
+		}
+
+		.messages-container {
+			flex: 1;
+			height: auto; 
+			padding: 15px;
+		}
+
+		.message {
+			max-width: 90%;
+			font-size: 14px;
+			margin-bottom: 5px;
+		}
+
+		.input-area {
+			padding: 10px;
+			padding-bottom: calc(10px + var(--safe-area-bottom));
+			background: #fff;
+		}
+
+		input[type="text"] {
+			font-size: 16px !important;
+			padding: 12px;
+		}
+
+		button {
+			padding: 0 20px;
+		}
+
+		.modal-content {
+			width: 95%;
+			padding: 20px;
+			margin: 10px;
+			max-height: 85vh;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+		}
+
+		@media (min-width: 768px) {
+			.browser-container {
+				width: 95%;
+				height: 85vh;
+			}
+			.tab {
+				font-size: 14px;
+			}
+		}
+
+		html, body {
+			height: 100dvh;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.browser-container {
+			width: 100%;
+			max-width: 1000px;
+			height: 100dvh;
+			display: flex;
+			flex-direction: column;
+			margin: 0 auto;
+		}
+
+		.chat-window {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			background: var(--active-tab);
+			border: 1px solid var(--border-color);
+			margin-top: -1px;
+		}
+
+		.messages-container {
+			flex: 1;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			padding: 15px;
+			height: auto;
+		}
+
+		.input-area {
+			flex-shrink: 0;
+			background: white;
+			padding: 15px;
+			padding-bottom: calc(15px + env(safe-area-inset-bottom));
+			border-top: 1px solid var(--border-color);
+			display: flex;
+		}
+		.message {
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			padding: 12px 15px 8px 15px;
+		}
+
+		.msg-content {
+			word-wrap: break-word;
+			margin-bottom: 5px;
+		}
+
+		.copy-area {
+			display: flex;
+			justify-content: flex-end;
+			margin-top: 4px;
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+			padding-top: 4px;
+		}
+
+		.message.user .copy-area {
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.copy-btn {
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			font-size: 12px;
+			color: inherit;
+			opacity: 0.5;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			padding: 4px 8px;
+			transition: opacity 0.2s;
+		}
+
+		.copy-btn:hover {
+			opacity: 1;
+		}
+
+		.copy-btn svg {
+			width: 14px;
+			height: 14px;
+			fill: currentColor;
+		}
+
+		.input-area {
+			display: flex;
+			padding: 15px;
+			background: white;
+			border-top: 1px solid var(--border-color);
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		input[type="text"] {
+			flex: 1;
+			min-width: 0;
+			padding: 12px;
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			outline: none;
+		}
+
+		button#send-btn {
+			flex-shrink: 0;
+			white-space: nowrap;
+			padding: 10px 20px;
+		}
+
+		p {
+			margin-top: 0;
+		 }
+    </style>
+	<script>
+		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
+		document.documentElement.style.visibility = 'hidden'; 
+</script>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<div id="privacy-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2>🛡️ Важливе зауваження</h2>
+        <p>AskExpertAI використовує штучний інтелект для надання послуг. Будь ласка, пам'ятайте:</p>
+        <ul>
+            <li><strong>Не передавайте конфіденційну інформацію:</strong> адреси, номери телефонів, паролі або повні імена тощо.</li>
+            <li><strong>Це не заміна ветеринара/лікаря/перекладача:</strong> відповіді мають інформаційний характер. У критичних ситуаціях звертайтеся до фахівця.</li>
+            <li><strong>Дані зберігаються:</strong> історія чату зберігається для покращення якості відповідей.</li>
+        </ul>
+        <button onclick="acceptPrivacy()" class="btn-accept">Я розумію та згоден</button>
+    </div>
+</div>
+
+<div class="browser-container">
+    <div class="tabs-header">
+        <div class="tab active" onclick="switchTab('vet')" data-role="vet">🐾 Ветеринар</div>
+        <div class="tab" onclick="switchTab('doctor')" data-role="doctor">🏥 Лікар</div>
+        <div class="tab" onclick="switchTab('translator')" data-role="translator">🌐 Перекладач</div>
+    </div>
+
+    <div class="chat-window">
+		<div id="status-bar" style="background: #f8f9fa; padding: 8px 20px; font-size: 13px; border-bottom: 1px solid #ddd; color: #666;">
+			⏳ Перевірка доступності сервісу...
+		</div>
+        <div id="chat-messages" class="messages-container">
+            <div class="message ai">Вітаю! Я ваш персональний помічник. Оберіть вкладку вище, щоб змінити мою спеціалізацію.</div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Введіть ваше запитання..." onkeypress="if(event.key==='Enter') handleSend()">
+            <button id="send-btn" onclick="handleSend()">Надіслати</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchTab(role) {
+    if (currentRole === role) return;
+    currentRole = role;
+
+    localStorage.setItem('lastSelectedRole', role);
+
+    document.querySelectorAll('.tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.role === role);
+    });
+
+    renderMessages();
+}
+
+function acceptPrivacy() {
+    localStorage.setItem('privacyAccepted', 'true');
+    document.getElementById('privacy-modal').style.display = 'none';
+}
+</script>
+<script>
+    const WORKER_URL = 'https://aiexpert-fd1f.basyliydelcreatore-01.workers.dev';
+let currentRole = window.currentRole;
+
+const histories = {
+        vet: [{ type: 'ai', content: 'Я готовий допомогти вашому улюбленцю. Що сталося?' }],
+        doctor: [{ type: 'ai', content: 'Я слухаю ваші скарги. Пам’ятайте, я лише ШІ-консультант.' }],
+        translator: [{ type: 'ai', content: 'Надішліть текст для перекладу.' }]
+    };
+
+    let userId = localStorage.getItem('vet_ai_user_id');
+    if (!userId) {
+        userId = crypto.randomUUID();
+        localStorage.setItem('vet_ai_user_id', userId);
+    }
+	
+	async function copyToClipboard(btn, index) {
+    const textToCopy = histories[currentRole][index].content;
+    const label = btn.querySelector('span');
+    const originalText = label.innerText;
+
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+        
+        label.innerText = 'Скопійовано!';
+        btn.style.color = '#2ecc71';
+        
+        setTimeout(() => {
+            label.innerText = originalText;
+            btn.style.color = ''; 
+        }, 2000);
+    } catch (err) {
+        label.innerText = 'Помилка';
+        console.error(err);
+    }
+}
+
+
+function initialisation() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => {
+        if (t.dataset.role === currentRole) {
+            t.classList.add('active');
+        } else {
+            t.classList.remove('active');
+        }
+    });
+
+    renderMessages();
+
+    document.documentElement.style.visibility = 'visible';
+}
+
+initialisation();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const privacyAccepted = localStorage.getItem('privacyAccepted');
+    if (!privacyAccepted) {
+        document.getElementById('privacy-modal').style.display = 'flex';
+    }
+});
+
+	async function getDetailedErrorMessage(jsError, serverData = null) {
+		if (serverData && serverData.error === 'overloaded') {
+			return "⏳ **ШІ перевантажений.** Сервіс отримав забагато запитів одночасно. Спробуйте ще раз через декілька хвилин.";
+		}
+
+		if (serverData && serverData.error === 'api_error') {
+			const debugInfo = serverData.details ? `<br><small style="opacity: 0.7">Деталі: ${serverData.details}</small>` : "";
+			console.log("Помилка ШІ-сервісу. Виникла технічна проблема при зверненні до Gemini. Деталі: " + serverData.details);
+			return "⚙️ **Помилка ШІ-сервісу.** Виникла технічна проблема при зверненні до Gemini. Спробуйте пізніше.";
+		}
+	
+		if (!navigator.onLine) {
+			return "📡 **Відсутній інтернет.** Перевірте підключення.";
+		}
+
+		try {
+			const res = await fetch(`${WORKER_URL}/api/health`, {
+				headers: { 'x-user-id': userId }
+			});
+			const data = await res.json();
+
+			if (data.remaining <= 0) {
+				return "🛑 **Денний ліміт вичерпано.** Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!";
+			}
+		} catch (e) {
+			return "🔌 **Сервер недоступний.** Не вдалося зв'язатися з обробником.";
+		}
+
+		return `⚠️ **Помилка:** ${jsError.message || "Невідома помилка"}. Спробуйте оновити сторінку.`;
+	}
+
+	async function handleSend() {
+		const input = document.getElementById('user-input');
+		const btn = document.getElementById('send-btn');
+		const text = input.value.trim();
+
+		if (!text) return;
+
+		input.value = '';
+		input.disabled = true;
+		btn.disabled = true;
+
+		histories[currentRole].push({ type: 'user', content: text });
+		renderMessages();
+			
+		const container = document.getElementById('chat-messages');
+		const loadingMsg = document.createElement('div');
+		loadingMsg.id = 'ai-loading-indicator';
+		loadingMsg.className = 'message ai loading';
+		loadingMsg.innerHTML = `
+			<div class="typing-indicator">
+				<span></span><span></span><span></span>
+			</div>
+		`;
+		container.appendChild(loadingMsg);
+		container.scrollTop = container.scrollHeight;
+
+		try {
+			const response = await fetch(`${WORKER_URL}/api/chat`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'x-user-id': userId
+				},
+				body: JSON.stringify({ message: text, role: currentRole })
+			});
+
+			const data = await response.json();
+			
+			if (document.getElementById('ai-loading-indicator')) {
+				document.getElementById('ai-loading-indicator').remove();
+			}
+			
+			if (response.ok && data.response) {
+				histories[currentRole].push({ type: 'ai', content: data.response });
+			} else {
+				console.warn(`[Chat] Server returned error. Status: ${response.status}`, data);
+				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
+				histories[currentRole].push({ type: 'ai', content: detailedError });
+			}
+		} catch (error) {
+			console.error("[Chat] Network or Runtime Error:", error);
+		
+			if (document.getElementById('ai-loading-indicator')) {
+				document.getElementById('ai-loading-indicator').remove();
+			}
+		
+			const detailedError = await getDetailedErrorMessage(error, null);
+			
+			histories[currentRole].push({ 
+				type: 'ai', 
+				content: detailedError 
+			});
+		} finally {
+			input.disabled = false;
+			btn.disabled = false;
+			renderMessages();
+			input.focus();
+			await checkStatus();
+		}
+	}
+
+    function renderMessages() {
+    const container = document.getElementById('chat-messages');
+    container.innerHTML = histories[currentRole].map((msg, index) => {
+        const content = msg.type === 'ai' ? marked.parse(msg.content) : msg.content;
+        
+        return `
+            <div class="message ${msg.type}">
+                <div class="msg-content">${content}</div>
+                <div class="copy-area">
+                    <button class="copy-btn" onclick="copyToClipboard(this, ${index})">
+                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        <span>Копіювати</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    const lastMessage = container.lastElementChild;
+    if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+	
+	window.addEventListener('online', () => {
+		updateOnlineStatus(true);
+		checkStatus();
+	});
+
+	window.addEventListener('offline', () => {
+		updateOnlineStatus(false);
+	});
+
+	function updateOnlineStatus(isOnline) {
+		const statusBar = document.getElementById('status-bar');
+		const btn = document.getElementById('send-btn');
+		const input = document.getElementById('user-input');
+
+		if (!isOnline) {
+			statusBar.innerHTML = `📡 <strong>Відсутній інтернет:</strong> Перевірте з'єднання.`;
+			statusBar.style.backgroundColor = "#ffebee";
+			statusBar.style.color = "#c62828";
+			btn.disabled = true;
+			input.disabled = true;
+		} else {
+			statusBar.style.backgroundColor = "#f8f9fa";
+			statusBar.style.color = "#666";
+		}
+	}
+
+	async function checkStatus() {
+		const statusBar = document.getElementById('status-bar');
+		const input = document.getElementById('user-input');
+		const btn = document.getElementById('send-btn');
+		statusBar.innerHTML = '⏳ Перевірка доступності сервісу...';
+		btn.disabled = true;
+		input.disabled = true;
+		try {
+			const res = await fetch(`${WORKER_URL}/api/health`, {
+				headers: { 'x-user-id': userId }
+			});
+			const data = await res.json();
+
+			if (data.remaining <= 0) {
+				statusBar.innerHTML = `❌ <strong>Доступ обмежено:</strong> 🛑 Денний ліміт вичерпано. Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!`;
+				statusBar.style.color = "#c62828";
+				input.disabled = true;
+				btn.disabled = true;
+				input.placeholder = "Спробуйте пізніше...";
+				return;
+			}
+            
+			let statusParts = [];
+			statusBar.innerHTML = `✅ Доступно запитів: <strong>${data.remaining}</strong>`;
+			statusBar.style.color = "#2e7d32";
+			input.disabled = false;
+			btn.disabled = false;
+		
+		} catch (error) {
+			console.error("[Health] Check failed:", error);
+			let errorMsg = `❌ <strong>Доступ обмежено:</strong> 🔌 Сервер недоступний або відсутній інтернет.`;
+			if (error.name === 'TimeoutError') {
+				errorMsg = `❌ <strong>Доступ обмежено:</strong> 🔌 Сервер недоступний. Не вдалося зв'язатися з обробником запитів. Можливо, сервіс на технічному обслуговуванні.`;
+			}
+			statusBar.innerHTML = `❌ ${errorMsg}`;
+			statusBar.style.backgroundColor = "#ffebee";
+			statusBar.style.color = "#c62828";
+			input.disabled = true;
+			btn.disabled = true;
+			input.placeholder = "Спробуйте пізніше...";
+		}
+
+		
+	}
+
+	checkStatus();
+</script>
+
+</body>
+</html>
