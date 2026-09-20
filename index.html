@@ -439,9 +439,13 @@
 			padding: 10px 20px;
 		}
 
-		p {
-			margin-top: 0;
+		.msg-content p {
+			margin: 0;
 		 }
+		 
+		 .msg-content p:not(:last-child) {
+    margin-bottom: 10px; /* Додає відступ, тільки якщо абзаців декілька */
+}
 		 /* Розміщення посилання зліва внизу */
 .site-footer {
   position: fixed;
@@ -494,17 +498,16 @@ justify-content: flex-end;
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('privacy-modal');
   const openBtn = document.getElementById('open-privacy');
-  const closeBtn = document.getElementsByClassName('btn-accept')[0];
-
+  
   openBtn.addEventListener('click', (e) => {
     e.preventDefault();
     modal.style.display = 'flex';
   });
-
-  closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
 });
+
+function acceptPrivacy() {
+    document.getElementById('privacy-modal').style.display = 'none';
+}
 </script>
 <div class="browser-container">
     <div class="tabs-header">
@@ -540,10 +543,6 @@ function switchTab(role) {
     });
 
     renderMessages();
-}
-
-function acceptPrivacy() {
-    document.getElementById('privacy-modal').style.display = 'none';
 }
 </script>
 <script>
