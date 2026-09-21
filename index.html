@@ -446,7 +446,7 @@
 		 .msg-content p:not(:last-child) {
     margin-bottom: 10px; /* Додає відступ, тільки якщо абзаців декілька */
 }
-		 /* Розміщення посилання зліва внизу */
+
 .site-footer {
   position: fixed;
   bottom: 0;
@@ -468,6 +468,15 @@ justify-content: flex-end;
 .site-footer a:hover {
     color: var(--accent-color);
 }
+blockquote {
+    background: #f8f9fa;
+    border-left: 5px solid var(--accent-color);
+    padding: 15px;
+    margin: 10px 0;
+    font-style: normal;
+    color: #495057;
+}
+
     </style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -532,6 +541,16 @@ function acceptPrivacy() {
 </div>
 
 <script>
+let consecutiveErrors = 0;
+
+const systemPrompts = {
+	vet: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів ветеринарії DSc, консультуюча виключно на засадах суворої наукової доказової ветеринарної медицини (Evidence-Based Veterinary Medicine - EBVM). ЦІЛЬ: Надати власнику тварини точну, перевірену наукою інформацію, мінімізуючи ризики для життя та здоров'я тварини. Помилка або неточне слово неприпустимі.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних ветеринарних асоціацій (наприклад, WSAVA, AAHA, AVMA), журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у маленьких кошенят/цуценят), твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ВЕТЕРИНАРНОЇ КЛІНІКИ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку власник може надати самостійно.\n\n3. Табу на ризиковані призначення: Ніколи не призначай дозування сильнодіючих або токсичних для певних видів препаратів (наприклад, парацетамол котам, ібупрофен собакам) для самостійного лікування вдома.\n\n4. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів власникам тварин.\n\n5. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів на основі EBVM -> Можливі причини (диференційні діагнози) -> Яке лікування згідно EBVM.",
+
+	doctor: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів Медицини DSc. Ти створюєш відповіді не просто, а занурюєшся в кожен подих, кожен вигин, кожне слово проблеми користувача. Чим точніше і якісніше з наукової точки зору (наукова інформація доказової клінічної медицини in vivo та потім in vitro за рівнем доказовості А В С Д щодо людини) твоя відповідь (у тому числі включений тобою у відповідь аналіз проблеми користувача через призму доказової клінічної медицини щодо специфічних біомаркерів крові людини, гормональних дефіцитів та гормональних надлишків), тим краще. Ти пишеш виключно згідно наукових клінічно доказових текстів. Відповідай крок за кроком, проходжуючи через всі етапи мислення (які користувач не бачить), там ти плануєш, як зробити запит користувача максимально правдивим з наукової точки зору.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних медичних асоціацій (наприклад, PubMed, Lancet), медичні журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у малят, твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ВЕТЕРИНАРНОЇ КЛІНІКИ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку користувач може надати самостійно.\n\n3. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів.\n\n4. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів виключно на основі наукової доказової медицини -> Можливі причини (диференційні діагнози) -> Яке лікування згідно наукової доказової медицини.",
+
+	translator: "Ти є професійний перекладач з глибоким знанням лінгвістики PhD DSc. Твоє завдання є перекладати текст, звертаючи особливу увагу на багатозначні слова. Перед перекладом проаналізуй контекст кожного речення, щоб визначити точне семантичне значення слова в оригіналі, і підбери найбільш відповідний еквівалент у цільовій мові."
+};
+
 function switchTab(role) {
     if (currentRole === role) return;
     currentRole = role;
@@ -562,25 +581,28 @@ const histories = {
     }
 	
 	async function copyToClipboard(btn, index) {
-    const textToCopy = histories[currentRole][index].content;
-    const label = btn.querySelector('span');
-    const originalText = label.innerText;
+		const msg = histories[currentRole][index];
+		const textToCopy = msg.copyContent || msg.content; 
+		
+		const label = btn.querySelector('span');
+		const originalText = label.innerText;
 
-    try {
-        await navigator.clipboard.writeText(textToCopy);
-        
-        label.innerText = 'Скопійовано!';
-        btn.style.color = '#2ecc71';
-        
-        setTimeout(() => {
-            label.innerText = originalText;
-            btn.style.color = ''; 
-        }, 2000);
-    } catch (err) {
-        label.innerText = 'Помилка';
-        console.error(err);
-    }
-}
+		try {
+			await navigator.clipboard.writeText(textToCopy);
+			
+			label.innerText = 'Скопійовано!';
+			btn.style.color = '#2ecc71';
+			
+			setTimeout(() => {
+				label.innerText = originalText;
+				btn.style.color = ''; 
+			}, 2000);
+		} catch (err) {
+			label.innerText = 'Помилка';
+			console.error(err);
+		}
+	}
+
 
 
 function initialisation() {
@@ -675,10 +697,48 @@ initialisation();
 			
 			if (response.ok && data.response) {
 				histories[currentRole].push({ type: 'ai', content: data.response });
+				consecutiveErrors = 0;
 			} else {
 				console.warn(`[Chat] Server returned error. Status: ${response.status}`, data);
 				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
 				histories[currentRole].push({ type: 'ai', content: detailedError });
+				consecutiveErrors++;
+				if (consecutiveErrors >= 2) {
+					const displayMessage = `💡 **Порада від системи:** Оскільки сервіс тимчасово нестабільний, ви можете зробити запит безпосередньо до [Google Gemini](https://gemini.google.com/), скопіювавши текст нижче:\n\n`;
+					
+					const systemText = systemPrompts[currentRole];
+					const userRequestText = `ЗАПИТ КОРИСТУВАЧА: ${text}`;
+					
+					const quotedSystem = systemText
+						.split('\n')
+						.map(line => line.trim() === '' ? '>' : `> ${line}`)
+						.join('\n');
+					
+					const visualContent = `${displayMessage}\n\n${quotedSystem}\n\n${userRequestText}`;
+					
+					const purePrompt = `${systemText}\n\n${userRequestText}`;
+					
+					histories[currentRole].push({ 
+						type: 'ai', 
+						content: visualContent, 
+						copyContent: purePrompt 
+					});
+	
+					consecutiveErrors = 0;
+					renderMessages();
+					setTimeout(() => {
+						const container = document.getElementById('chat-messages');
+						const lastMsg = container.lastElementChild;
+						if (lastMsg) {
+							lastMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}
+					}, 50);
+					input.disabled = false;
+					btn.disabled = false;
+					input.focus();
+					checkStatus();
+					return;
+				}
 			}
 		} catch (error) {
 			console.error("[Chat] Network or Runtime Error:", error);
@@ -686,7 +746,7 @@ initialisation();
 			if (document.getElementById('ai-loading-indicator')) {
 				document.getElementById('ai-loading-indicator').remove();
 			}
-		
+			
 			const detailedError = await getDetailedErrorMessage(error, null);
 			
 			histories[currentRole].push({ 
