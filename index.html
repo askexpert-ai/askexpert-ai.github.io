@@ -660,11 +660,15 @@ initialisation();
 
 		if (!text) return;
 
+ if (!histories[currentRole]) {
+        histories[currentRole] = [];
+    }
+	histories[currentRole].push({ type: 'user', content: text });
 		input.value = '';
 		input.disabled = true;
 		btn.disabled = true;
 
-		histories[currentRole].push({ type: 'user', content: text });
+    const historyPayload = Array.from(histories[currentRole]).slice(-10);
 		renderMessages();
 			
 		const container = document.getElementById('chat-messages');
@@ -686,7 +690,7 @@ initialisation();
 					'Content-Type': 'application/json',
 					'x-user-id': userId
 				},
-				body: JSON.stringify({ message: text, role: currentRole })
+				body: JSON.stringify({ history: historyPayload, role: currentRole })
 			});
 
 			const data = await response.json();
