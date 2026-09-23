@@ -660,15 +660,24 @@ initialisation();
 
 		if (!text) return;
 
- if (!histories[currentRole]) {
-        histories[currentRole] = [];
-    }
-	histories[currentRole].push({ type: 'user', content: text });
+		if (!histories[currentRole]) {
+			histories[currentRole] = [];
+		}
+		histories[currentRole].push({ type: 'user', content: text });
 		input.value = '';
 		input.disabled = true;
 		btn.disabled = true;
 
-    const historyPayload = Array.from(histories[currentRole]).slice(-10);
+		const historyPayload = Array.from(histories[currentRole])
+		.filter(msg => {
+			if (msg.type === 'user') return true;
+			
+			const errorEmojis = ['⏳', '⚙️', '📡', '🛑', '🔌', '⚠️'];
+			const isError = errorEmojis.some(emoji => msg.content.startsWith(emoji));
+			
+			return msg.type === 'ai' && !isError;
+		})
+		.slice(-10);
 		renderMessages();
 			
 		const container = document.getElementById('chat-messages');
