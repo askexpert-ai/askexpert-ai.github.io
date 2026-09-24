@@ -684,7 +684,7 @@ initialisation();
 		.filter(msg => {
 			if (msg.type === 'user') return true;
 			
-			const errorEmojis = ['⏳', '⚙️', '📡', '🛑', '🔌', '⚠️'];
+			const errorEmojis = ['⏳', '⚙️', '📡', '🛑', '🔌', '⚠️', '💡', '❌', '🐾', '🏥', '🌐'];
 			const isError = errorEmojis.some(emoji => msg.content.startsWith(emoji));
 			
 			return msg.type === 'ai' && !isError;
