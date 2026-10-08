@@ -708,7 +708,7 @@
 		}
 
 		try {
-			const res = await fetch(`${WORKER_URL}/api/health`, {
+			const res = await fetch(`${WORKER_URL}/api/limits`, {
 				headers: { 'x-user-id': userId }
 			});
 			const data = await res.json();
@@ -968,7 +968,7 @@
 		btn.disabled = true;
 		input.disabled = true;
 		try {
-			const res = await fetch(`${WORKER_URL}/api/health`, {
+			const res = await fetch(`${WORKER_URL}/api/limits`, {
 				headers: { 'x-user-id': userId }
 			});
 			const data = await res.json();
@@ -989,7 +989,7 @@
 			btn.disabled = false;
 		
 		} catch (error) {
-			console.error("[Health] Check failed:", error);
+			console.error("[Limits] Check failed:", error);
 			let errorMsg = `❌ <strong>Доступ обмежено:</strong> 🔌 Сервер недоступний або відсутній інтернет.`;
 			if (error.name === 'TimeoutError') {
 				errorMsg = `❌ <strong>Доступ обмежено:</strong> 🔌 Сервер недоступний. Не вдалося зв'язатися з обробником запитів. Можливо, сервіс на технічному обслуговуванні.`;
