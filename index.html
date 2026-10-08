@@ -208,6 +208,7 @@
             border-color: var(--border-color);
             cursor: not-allowed;
         }
+		
 		.modal-overlay {
 			position: fixed;
 			top: 0; left: 0; width: 100%; height: 100%;
@@ -415,6 +416,7 @@
 			border-top: 1px solid var(--border-color);
 			display: flex;
 		}
+		
 		.message {
 			display: flex;
 			flex-direction: column;
@@ -489,7 +491,7 @@
 
 		.msg-content p {
 			margin: 0;
-		 }
+		}
 		 
 		.msg-content p:not(:last-child) {
 			margin-bottom: 10px;
@@ -507,6 +509,7 @@
 			z-index: 6;
 
 		}
+		
 		.site-footer a {
 			color: #212529;
 			text-decoration: none;
@@ -525,14 +528,35 @@
 			font-style: normal;
 			color: #495057;
 		}
+		
+		.katex {
+			white-space: normal !important;
+		}
+
+		.katex .base {
+			white-space: normal !important;
+			width: auto !important;
+		}
+
+		.katex .strut {
+			display: inline-block;
+		}
+
+		.katex * {
+			white-space: normal !important;
+		}
     </style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
 		document.documentElement.style.visibility = 'hidden'; 
-</script>
+	</script>
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
 
 <div id="privacy-modal" class="modal-overlay">
     <div class="modal-content">
@@ -552,19 +576,19 @@
 </footer>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('privacy-modal');
-  const openBtn = document.getElementById('open-privacy');
-  
-  openBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modal.style.display = 'flex';
-  });
-});
+	document.addEventListener('DOMContentLoaded', () => {
+		const modal = document.getElementById('privacy-modal');
+		const openBtn = document.getElementById('open-privacy');
+	
+		openBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			modal.style.display = 'flex';
+		});
+	});
 
-function acceptPrivacy() {
-    document.getElementById('privacy-modal').style.display = 'none';
-}
+	function acceptPrivacy() {
+		document.getElementById('privacy-modal').style.display = 'none';
+	}
 </script>
 <div class="browser-container">
     <div class="tabs-header">
@@ -589,34 +613,34 @@ function acceptPrivacy() {
 </div>
 
 <script>
-let consecutiveErrors = 0;
+	let consecutiveErrors = 0;
 
-const systemPrompts = {
-	vet: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів Ветеринарії DSc, консультуюча виключно на засадах суворої наукової доказової ветеринарної медицини (Evidence-Based Veterinary Medicine - EBVM). ЦІЛЬ: Надати власнику тварини точну, перевірену наукою повну (АНАЛІЗ 360) інформацію, мінімізуючи ризики для життя та здоров'я тварини. Помилка або неточне слово неприпустимі.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних ветеринарних асоціацій (наприклад, WSAVA, AAHA, AVMA), журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у маленьких кошенят/цуценят), твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ВЕТЕРИНАРНОЇ КЛІНІКИ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку власник може надати самостійно.\n\n3. Табу на ризиковані призначення: Ніколи не призначай дозування сильнодіючих або токсичних для певних видів препаратів (наприклад, парацетамол котам, ібупрофен собакам) для самостійного лікування вдома.\n\n4. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів власникам тварин.\n\n5. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів на основі EBVM -> Можливі причини (диференційні діагнози) -> Яке лікування згідно EBVM.",
+	const systemPrompts = {
+		vet: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів Ветеринарії DSc, консультуюча виключно на засадах суворої наукової доказової ветеринарної медицини (Evidence-Based Veterinary Medicine - EBVM). ЦІЛЬ: Надати власнику тварини точну, перевірену наукою повну (АНАЛІЗ 360) інформацію, мінімізуючи ризики для життя та здоров'я тварини. Помилка або неточне слово неприпустимі.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних ветеринарних асоціацій (наприклад, WSAVA, AAHA, AVMA), журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у маленьких кошенят/цуценят), твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ВЕТЕРИНАРНОЇ КЛІНІКИ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку власник може надати самостійно.\n\n3. Табу на ризиковані призначення: Ніколи не призначай дозування сильнодіючих або токсичних для певних видів препаратів (наприклад, парацетамол котам, ібупрофен собакам) для самостійного лікування вдома.\n\n4. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів власникам тварин.\n\n5. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів на основі EBVM -> Можливі причини (диференційні діагнози) -> Яке лікування згідно EBVM.",
 
-	doctor: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів Медицини DSc. Ти створюєш відповіді не просто, а занурюєшся в кожен подих, кожен вигин, кожне слово проблеми користувача. Чим повніше (АНАЛІЗ 360), точніше і якісніше з наукової точки зору (наукова інформація доказової клінічної медицини in vivo та потім in vitro за рівнем доказовості А В С Д щодо людини) твоя відповідь (у тому числі включений тобою у відповідь аналіз проблеми користувача через призму доказової клінічної медицини щодо специфічних біомаркерів крові людини, гормональних дефіцитів та гормональних надлишків), тим краще. Ти пишеш виключно згідно наукових клінічно доказових текстів. Відповідай крок за кроком, проходжуючи через всі етапи мислення (які користувач не бачить), там ти плануєш, як зробити запит користувача максимально правдивим з наукової точки зору.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних медичних асоціацій (наприклад, PubMed, Lancet), медичні журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у малят, твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ЛІКАРЯ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку користувач може надати самостійно.\n\n3. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів.\n\n4. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів виключно на основі наукової доказової медицини -> Можливі причини (диференційні діагнози) -> Яке лікування згідно наукової доказової медицини.",
+		doctor: "Ти є найавторитетніша консиліум-платформа, яка складається з Консиліуму найавторитетніших Докторів Медицини DSc. Ти створюєш відповіді не просто, а занурюєшся в кожен подих, кожен вигин, кожне слово проблеми користувача. Чим повніше (АНАЛІЗ 360), точніше і якісніше з наукової точки зору (наукова інформація доказової клінічної медицини in vivo та потім in vitro за рівнем доказовості А В С Д щодо людини) твоя відповідь (у тому числі включений тобою у відповідь аналіз проблеми користувача через призму доказової клінічної медицини щодо специфічних біомаркерів крові людини, гормональних дефіцитів та гормональних надлишків), тим краще. Ти пишеш виключно згідно наукових клінічно доказових текстів. Відповідай крок за кроком, проходжуючи через всі етапи мислення (які користувач не бачить), там ти плануєш, як зробити запит користувача максимально правдивим з наукової точки зору.\n\nПРАВИЛА ТА ОБМЕЖЕННЯ:\n\n1. Джерела інформації: Спирайся ТІЛЬКИ на рецензовані наукові дослідження, офіційні гайдлайни міжнародних медичних асоціацій (наприклад, PubMed, Lancet), медичні журнали та підручники рівня DSc. Заборонено використовувати народну медицину, гомеопатію, альтернативні методи або неперевірені поради з інтернету.\n\n2. Критичні стани (Тріаж): Якщо симптоми вказують на загрозу життю (наприклад, утруднене дихання, сильна кровотеча, судоми, підозра на гостре отруєння, завороток шлунка, апатія у малят, твоя ПЕРША і НАЙГОЛОВНІША фраза має бути: 'НЕГАЙНО ЗВЕРНІТЬСЯ ДО ЛІКАРЯ. ЦЕ КРИТИЧНИЙ СТАН'. Тільки після цього можна дати першу домедичну допомогу, яку користувач може надати самостійно.\n\n3. Тон мовлення: Сухий, професійний, чіткий, без зайвих емоцій, але з розумінням серйозності ситуації. Використовуй прості слова для пояснення складних медичних термінів.\n\n4. Чесність: Якщо у доказовій медицині немає однозначної відповіді на питання або даних недостатньо, прямо скажи: 'Наразі немає достатніх наукових доказів для підтвердження...' або 'Науці невідомий точний механізм...'. Не вигадуй факти.\n\nФормат відповіді:\n\n- Якщо стан екстрений: Попередження про клініку -> Що робити прямо зараз -> Чого робити не можна.\n\n- Якщо стан плановий: Оцінка симптомів виключно на основі наукової доказової медицини -> Можливі причини (диференційні діагнози) -> Яке лікування згідно наукової доказової медицини.",
 
-	translator: "Ти є професійний перекладач з глибоким знанням лінгвістики PhD DSc. Твоє завдання є перекладати текст, звертаючи особливу увагу на багатозначні слова. Перед перекладом проаналізуй контекст кожного речення, щоб визначити точне семантичне значення слова в оригіналі, і підбери найбільш відповідний еквівалент у цільовій мові."
-};
+		translator: "Ти є професійний перекладач з глибоким знанням лінгвістики PhD DSc. Твоє завдання є перекладати текст, звертаючи особливу увагу на багатозначні слова. Перед перекладом проаналізуй контекст кожного речення, щоб визначити точне семантичне значення слова в оригіналі, і підбери найбільш відповідний еквівалент у цільовій мові."
+	};
 
-function switchTab(role) {
-    if (currentRole === role) return;
-    currentRole = role;
+	function switchTab(role) {
+		if (currentRole === role) return;
+		currentRole = role;
 
-    localStorage.setItem('lastSelectedRole', role);
+		localStorage.setItem('lastSelectedRole', role);
 
-    document.querySelectorAll('.tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.role === role);
-    });
+		document.querySelectorAll('.tab').forEach(t => {
+			t.classList.toggle('active', t.dataset.role === role);
+		});
 
-    renderMessages();
-}
+		renderMessages();
+	}
 </script>
 <script>
     const WORKER_URL = 'https://aiassistant-f70e.basyliydelcreatore-01.workers.dev';
-let currentRole = window.currentRole;
+	let currentRole = window.currentRole;
 
-const histories = {
+	const histories = {
         vet: [{ type: 'ai', content: 'Я готовий допомогти вашому улюбленцю. Що сталося?' }],
         doctor: [{ type: 'ai', content: 'Я слухаю ваші скарги. Пам’ятайте, я лише ШІ-консультант.' }],
         translator: [{ type: 'ai', content: 'Надішліть текст для перекладу.' }]
@@ -651,24 +675,22 @@ const histories = {
 		}
 	}
 
+	function initialisation() {
+		const tabs = document.querySelectorAll('.tab');
+		tabs.forEach(t => {
+			if (t.dataset.role === currentRole) {
+				t.classList.add('active');
+			} else {
+				t.classList.remove('active');
+			}
+		});
 
+		renderMessages();
 
-function initialisation() {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(t => {
-        if (t.dataset.role === currentRole) {
-            t.classList.add('active');
-        } else {
-            t.classList.remove('active');
-        }
-    });
+		document.documentElement.style.visibility = 'visible';
+	}
 
-    renderMessages();
-
-    document.documentElement.style.visibility = 'visible';
-}
-
-initialisation();
+	initialisation();
 
 	async function getDetailedErrorMessage(jsError, serverData = null) {
 		if (serverData && serverData.error === 'overloaded') {
@@ -823,29 +845,93 @@ initialisation();
 		}
 	}
 
-    function renderMessages() {
-    const container = document.getElementById('chat-messages');
-    container.innerHTML = histories[currentRole].map((msg, index) => {
-        const content = msg.type === 'ai' ? marked.parse(msg.content) : msg.content;
-        
-        return `
-            <div class="message ${msg.type}">
-                <div class="msg-content">${content}</div>
-                <div class="copy-area">
-                    <button class="copy-btn" onclick="copyToClipboard(this, ${index})">
-                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                        <span>Копіювати</span>
-                    </button>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    const lastMessage = container.lastElementChild;
-    if (lastMessage) {
-        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
+	function escapeHtml(text) {
+		const div = document.createElement('div');
+		div.textContent = text;
+		return div.innerHTML;
+	}
+
+    function parseMarkdownWithMath(text) {
+		const mathBlocks = [];
+		const protectedText = text.replace(
+			/(\$\$[\s\S]*?\$\$|\$[^$\n]+?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g,
+			(match) => {
+				const index = mathBlocks.length;
+				mathBlocks.push(match);
+
+				return `@@MATH_BLOCK_${index}@@`;
+			}
+		);
+
+		let html = marked.parse(protectedText);
+
+		html = html.replace(
+			/@@MATH_BLOCK_(\d+)@@/g,
+			(_, index) => mathBlocks[Number(index)]
+		);
+
+		return html;
+	}
+
+
+	function renderMessages() {
+		const container = document.getElementById('chat-messages');
+
+		container.innerHTML = histories[currentRole].map((msg, index) => {
+
+			let content;
+
+			if (msg.type === 'ai') {
+				content = parseMarkdownWithMath(msg.content);
+			} else {
+				content = escapeHtml(msg.content);
+			}
+
+			return `
+				<div class="message ${msg.type}">
+					<div class="msg-content">${content}</div>
+
+					<div class="copy-area">
+						<button class="copy-btn" onclick="copyToClipboard(this, ${index})">
+							<svg viewBox="0 0 24 24">
+								<path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1.9-2-2-2zm0 16H8V7h11v14z"/>
+							</svg>
+							<span>Копіювати</span>
+						</button>
+					</div>
+				</div>
+			`;
+		}).join('');
+		
+		container.querySelectorAll('.msg-content').forEach(element => {
+			renderMathInElement(element, {
+				delimiters: [
+					{ left: '$$', right: '$$', display: true },
+					{ left: '\\[', right: '\\]', display: true },
+					{ left: '$', right: '$', display: false },
+					{ left: '\\(', right: '\\)', display: false }
+				],
+				throwOnError: false,
+				ignoredTags: [
+					'script',
+					'noscript',
+					'style',
+					'textarea',
+					'pre',
+					'code'
+				]
+			});
+		});
+
+		const lastMessage = container.lastElementChild;
+
+		if (lastMessage) {
+			lastMessage.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
+	}
 
 	
 	window.addEventListener('online', () => {
