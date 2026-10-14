@@ -734,22 +734,40 @@
 		}
 	}
 
-	function initialisation() {
+	async function initialisation() {
 		const tabs = document.querySelectorAll('.tab');
+		
 		tabs.forEach(t => {
-			if (t.dataset.role === currentRole) {
-				t.classList.add('active');
-			} else {
-				t.classList.remove('active');
-			}
+			t.classList.toggle('active', t.dataset.role === currentRole);
 		});
 
 		renderMessages();
+		if (typeof applyScaling === 'function') applyScaling();
+
+		const startTime = Date.now();
+		const timeout = 1000;
+
+		const waitForCorrectTab = async () => {
+			while (Date.now() - startTime < timeout) {
+				const storedRole = localStorage.getItem('lastSelectedRole') || 'vet'; 
+				const activeTab = document.querySelector('.tab.active');
+				const activeRoleInDom = activeTab ? activeTab.dataset.role : null;
+
+				if (activeRoleInDom === storedRole) {
+					return true;
+				}
+
+				await new Promise(res => setTimeout(res, 30));
+			}
+			return false;
+		};
+
+		await waitForCorrectTab();
+
+		await new Promise(res => setTimeout(res, 20));
 
 		document.documentElement.style.visibility = 'visible';
 	}
-
-	initialisation();
 
 	async function getDetailedErrorMessage(jsError, serverData = null) {
 		if (serverData && serverData.error === 'overloaded') {
@@ -1084,11 +1102,14 @@
             container.style.transform = `scale(${scaleFactor})`;
             container.style.width = `calc(85% / ${scaleFactor})`;
 			container.style.height = `calc(85% / ${scaleFactor})`;
+            
+            container.querySelectorAll('input, button, .tab, .chat-window').forEach(el => el.style.borderWidth = '1px');
 
         } else {
             container.style.transform = `scale(${1})`;
 			container.style.height = '100dvh';
 			container.style.width = '100dvw';
+			container.querySelectorAll('*').forEach(el => el.style.borderWidth = '1px');
         }
     }
 
@@ -1096,6 +1117,8 @@
     
     applyScaling();
 })();
+
+initialisation();
 </script>
 </body>
 </html>
