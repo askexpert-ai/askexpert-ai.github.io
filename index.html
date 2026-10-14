@@ -587,18 +587,22 @@
 		}
 
 		.tab {
-			padding: calc(12px * var(--scale)) calc(30px * var(--scale));
-			font-size: calc(14px * var(--scale));
+			padding: calc(15px * var(--scale)) calc(10px * var(--scale));
+			font-size: calc(12px * var(--scale));
 		}
 
 		.message {
-			font-size: calc(15px * var(--scale));
-			padding: calc(12px * var(--scale)) calc(15px * var(--scale));
+			font-size: calc(14px * var(--scale));
+			padding: calc(12px * var(--scale)) calc(15px * var(--scale)) calc(8px * var(--scale)) calc(15px * var(--scale));
 		}
 
-		input[type="text"], button#send-btn {
-			font-size: calc(15px * var(--scale));
-			padding: calc(15px * var(--scale)) calc(20px * var(--scale));
+		input[type="text"] {
+			font-size: calc(16px * var(--scale));
+			padding: calc(12px * var(--scale));
+		}
+		
+		button#send-btn {
+			calc(10px * var(--scale)) calc(20px * var(--scale));
 		}
 
 
@@ -653,7 +657,7 @@
     </div>
 
     <div class="chat-window">
-		<div id="status-bar" style="background: #f8f9fa; padding: 8px 20px; font-size: 13px; border-bottom: 1px solid #ddd; color: #666;">
+		<div id="status-bar" style="background: #f8f9fa; padding: 8px 20px; font-size: 14px; border-bottom: 1px solid #ddd; color: #666;">
 			⏳ Перевірка доступності сервісу...
 		</div>
         <div id="chat-messages" class="messages-container">
