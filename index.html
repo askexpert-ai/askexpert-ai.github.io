@@ -577,6 +577,31 @@
 			padding-right: 1px;
 			width: 100%;
 		}
+		
+		:root {
+			--scale: 1;
+		}
+
+		html {
+			font-size: calc(16px * var(--scale));
+		}
+
+		.tab {
+			padding: calc(12px * var(--scale)) calc(30px * var(--scale));
+			font-size: calc(14px * var(--scale));
+		}
+
+		.message {
+			font-size: calc(15px * var(--scale));
+			padding: calc(12px * var(--scale)) calc(15px * var(--scale));
+		}
+
+		input[type="text"], button#send-btn {
+			font-size: calc(15px * var(--scale));
+			padding: calc(15px * var(--scale)) calc(20px * var(--scale));
+		}
+
+
     </style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -1037,6 +1062,36 @@
 
 	checkStatus();
 </script>
+<script>
+/**
+ * Логіка масштабування від Собору Principal Engineers
+ * Дозволяє залишити CSS у пікселях, масштабуючи весь інтерфейс візуально.
+ */
+(function() {
+    const container = document.querySelector('.browser-container');
+    const BREAKPOINT_START = 950;
+    const REFERENCE_WIDTH = 1000;
 
+    function applyScaling() {
+        const windowWidth = window.innerWidth;
+
+        if (windowWidth > BREAKPOINT_START) {
+            const scaleFactor = windowWidth / REFERENCE_WIDTH;
+            container.style.transform = `scale(${scaleFactor})`;
+            container.style.width = `calc(85% / ${scaleFactor})`;
+			container.style.height = `calc(85% / ${scaleFactor})`;
+
+        } else {
+            container.style.transform = `scale(${1})`;
+			container.style.height = '100dvh';
+			container.style.width = '100dvw';
+        }
+    }
+
+    window.addEventListener('resize', applyScaling);
+    
+    applyScaling();
+})();
+</script>
 </body>
 </html>
