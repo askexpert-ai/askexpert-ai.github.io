@@ -389,6 +389,12 @@
 			display: flex;
 			flex-direction: column;
 			margin: 0 auto;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: crisp-edges;
+			-webkit-font-smoothing: antialiased;
+			text-rendering: optimizeLegibility;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
 		}
 
 		.chat-window {
@@ -1085,40 +1091,43 @@
 	checkStatus();
 </script>
 <script>
-/**
- * Логіка масштабування від Собору Principal Engineers
- * Дозволяє залишити CSS у пікселях, масштабуючи весь інтерфейс візуально.
- */
-(function() {
-    const container = document.querySelector('.browser-container');
-    const BREAKPOINT_START = 950;
-    const REFERENCE_WIDTH = 1000;
+	(function() {
+		const container = document.querySelector('.browser-container');
+		const BREAKPOINT_START = 950;
+		const REFERENCE_WIDTH = 1000;
 
-    function applyScaling() {
-        const windowWidth = window.innerWidth;
+		function applyScaling() {
+			const windowWidth = window.innerWidth;
 
-        if (windowWidth > BREAKPOINT_START) {
-            const scaleFactor = windowWidth / REFERENCE_WIDTH;
-            container.style.transform = `scale(${scaleFactor})`;
-            container.style.width = `calc(85% / ${scaleFactor})`;
-			container.style.height = `calc(85% / ${scaleFactor})`;
-            
-            container.querySelectorAll('input, button, .tab, .chat-window').forEach(el => el.style.borderWidth = '1px');
+			if (windowWidth > BREAKPOINT_START) {
+				const scaleFactor = windowWidth / REFERENCE_WIDTH;
+				container.style.transform = `scale(${scaleFactor})`;
+				container.style.width = `calc(85% / ${scaleFactor})`;
+				container.style.height = `calc(85% / ${scaleFactor})`;
+				
+				const preciseBorder = (1 / scaleFactor);
+				
+				const targets = container.querySelectorAll('input, button, .tab, .chat-window');
+				targets.forEach(el => {
+					el.style.borderWidth = `${preciseBorder}px`;
+				});
 
-        } else {
-            container.style.transform = `scale(${1})`;
-			container.style.height = '100dvh';
-			container.style.width = '100dvw';
-			container.querySelectorAll('*').forEach(el => el.style.borderWidth = '1px');
-        }
-    }
+			} else {
+				container.style.transform = `scale(${1})`;
+				container.style.height = '100vh';
+				container.style.width = '100vw';
+				container.style.height = '100dvh';
+				container.style.width = '100dvw';
+				container.querySelectorAll('*').forEach(el => el.style.borderWidth = '1px');
+			}
+		}
 
-    window.addEventListener('resize', applyScaling);
-    
-    applyScaling();
-})();
+		window.addEventListener('resize', applyScaling);
+		
+		applyScaling();
+	})();
 
-initialisation();
+	initialisation();
 </script>
 </body>
 </html>
