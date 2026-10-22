@@ -1174,6 +1174,7 @@
 			statusBar.style.color = "#c62828";
 			btn.disabled = true;
 			input.disabled = true;
+			input.placeholder = "Спробуйте пізніше...";
 		} else {
 			statusBar.style.backgroundColor = "#f8f9fa";
 			statusBar.style.color = "#666";
@@ -1206,8 +1207,10 @@
 			if (data.remaining !== undefined) {
 				statusBar.innerHTML = `✅ Доступно запитів: <strong>${data.remaining}</strong>`;
 				statusBar.style.color = "#2e7d32";
+				statusBar.style.backgroundColor = "#f8f9fa";
 				input.disabled = false;
 				btn.disabled = false;
+				input.placeholder = "Введіть ваше запитання...";
 			}
 		
 		} catch (error) {
