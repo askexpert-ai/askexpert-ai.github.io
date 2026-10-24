@@ -748,6 +748,52 @@
 			padding: 0.9375rem;
 			margin: 0.625rem 0;
 		}
+		
+		/* Стан контейнера під час очікування */
+.messages-container.is-waiting {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Повідомлення користувача, яке щойно відправили */
+.message.user.last-sent {
+    align-self: flex-end;
+    margin-bottom: 0; /* Притискаємо до плейсхолдера */
+}
+
+/* Покращений індикатор завантаження, що займає весь вільний простір */
+.message.ai.loading-placeholder {
+    flex-grow: 1; /* Займає все місце до низу контейнера */
+    align-self: stretch;
+    background: transparent; /* Спочатку прозорий */
+    border: 1px dashed var(--border-color);
+    margin-top: 10px;
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+}
+
+/* Клас для фінальної відповіді з анімацією появи */
+.message.ai.revealed {
+    animation: fadeInReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message.user {
+    /* Відступ зверху при скролі до цього елемента */
+    scroll-margin-top: 20px; 
+}
+
+.messages-container {
+    /* Вимикаємо автоматичне утримання скролу браузером */
+    overflow-anchor: none;
+}
 	</style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -945,6 +991,7 @@
 	async function handleSend() {
 		const input = document.getElementById('user-input');
 		const btn = document.getElementById('send-btn');
+		const container = document.getElementById('chat-messages');
 		const text = input.value.trim();
 
 		if (!text) return;
@@ -953,6 +1000,20 @@
 			histories[currentRole] = [];
 		}
 		histories[currentRole].push({ type: 'user', content: text });
+		renderMessages();
+		container.classList.add('is-waiting');
+		const placeholder = document.createElement('div');
+		placeholder.id = 'ai-placeholder';
+		placeholder.className = 'message ai loading-placeholder';
+		placeholder.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+		container.appendChild(placeholder);
+		
+		const userMsgs = container.querySelectorAll('.message.user');
+		const lastUserMsg = userMsgs[userMsgs.length - 1];
+		if (lastUserMsg) {
+			lastUserMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+		
 		input.value = '';
 		input.disabled = true;
 		btn.disabled = true;
@@ -967,18 +1028,6 @@
 			return msg.type === 'ai' && !isError;
 		})
 		.slice(-10);
-		renderMessages();
-			
-		const container = document.getElementById('chat-messages');
-		const loadingMsg = document.createElement('div');
-		loadingMsg.id = 'ai-loading-indicator';
-		loadingMsg.className = 'message ai loading';
-		loadingMsg.innerHTML = `
-			<div class="typing-indicator">
-				<span></span><span></span><span></span>
-			</div>
-		`;
-		container.appendChild(loadingMsg);
 
 		try {
 			const response = await fetch(`${WORKER_URL}/api/chat`, {
@@ -992,14 +1041,14 @@
 
 			const data = await response.json();
 			
-			if (document.getElementById('ai-loading-indicator')) {
-				document.getElementById('ai-loading-indicator').remove();
-			}
+			if (placeholder) placeholder.remove();
+			container.classList.remove('is-waiting');
 			
 			if (response.ok && data.response) {
-				histories[currentRole].push({ type: 'ai', content: data.response });
+				histories[currentRole].push({ type: 'ai', content: data.response, shouldAnimate: true });
 				consecutiveErrors = 0;
 				await checkStatus();
+				renderMessages();
 			} else {
 				console.warn(`[Chat] Server returned error. Status: ${response.status}`, data);
 				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
@@ -1044,10 +1093,8 @@
 			}
 		} catch (error) {
 			console.error("[Chat] Network or Runtime Error:", error);
-		
-			if (document.getElementById('ai-loading-indicator')) {
-				document.getElementById('ai-loading-indicator').remove();
-			}
+			if (placeholder) placeholder.remove();
+			container.classList.remove('is-waiting');
 			
 			const detailedError = await getDetailedErrorMessage(error, null);
 			
@@ -1055,6 +1102,7 @@
 				type: 'ai', 
 				content: detailedError 
 			});
+			renderMessages();
 		} finally {
 			input.disabled = false;
 			btn.disabled = false;
@@ -1105,8 +1153,9 @@
 				content = escapeHtml(msg.content);
 			}
 
+			const animationClass = msg.shouldAnimate ? 'revealed' : '';
 			return `
-				<div class="message ${msg.type}">
+				<div class="message ${msg.type} ${animationClass}">
 					<div class="msg-content">${content}</div>
 
 					<div class="copy-area">
@@ -1141,16 +1190,17 @@
 			});
 		});
 
-		const lastMessage = container.lastElementChild;
+		const userMsgs = container.querySelectorAll('.message.user');
+		const lastUserMsg = userMsgs[userMsgs.length - 1];
 
-		if (lastMessage) {
+		if (lastUserMsg) {
 			requestAnimationFrame(() => {
 				setTimeout(() => {
-					lastMessage.scrollIntoView({
+					lastUserMsg.scrollIntoView({
 						behavior: 'smooth',
 						block: 'start'
 					});
-				}, 0);
+				}, 50);
 			});
 		}
 	}
