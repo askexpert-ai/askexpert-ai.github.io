@@ -810,6 +810,15 @@
 			margin: 0 !important;
 			padding: 0 !important;
 			display: block !important;
+			position: relative;
+			min-height: 58px;
+		}
+
+		.message.ai.loading-placeholder.dynamic-spacer::before {
+			content: "";
+			display: block;
+			height: 100%;
+			width: 1px;
 		}
 	</style>
 	<script>
@@ -1030,15 +1039,21 @@
 			
 			const containerHeight = container.clientHeight;
 			const msgHeight = lastUserMsg.offsetHeight;
-			// Ваша формула: Контейнер - Питання - 20px
-			const spacerHeight = containerHeight - msgHeight - 20;
+			const spacerHeight = Math.max(containerHeight - msgHeight, 100);
 			
 			placeholder.style.height = `${spacerHeight}px`;
 			placeholder.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
 			
 			container.appendChild(placeholder);
 
-			lastUserMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					lastUserMsg.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}, 50);
+			});
 		}
 		
 		input.value = '';
