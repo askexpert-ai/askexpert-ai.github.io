@@ -979,7 +979,6 @@
 			</div>
 		`;
 		container.appendChild(loadingMsg);
-		container.scrollTop = container.scrollHeight;
 
 		try {
 			const response = await fetch(`${WORKER_URL}/api/chat`, {
@@ -1059,7 +1058,6 @@
 		} finally {
 			input.disabled = false;
 			btn.disabled = false;
-			renderMessages();
 			input.focus();
 			await checkStatus();
 		}
@@ -1146,9 +1144,13 @@
 		const lastMessage = container.lastElementChild;
 
 		if (lastMessage) {
-			lastMessage.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start'
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					lastMessage.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}, 0);
 			});
 		}
 	}
