@@ -763,7 +763,7 @@
 			flex-grow: 1;
 			align-self: stretch;
 			background: transparent;
-			border: 1px dashed var(--border-color);
+			border: 0;
 			margin-top: 10px;
 			display: flex;
 			justify-content: center;
@@ -771,7 +771,6 @@
 		}
 
 		.message.ai.revealed {
-			animation: fadeInReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 		}
 
 		.message.ai {
@@ -785,12 +784,10 @@
 		}
 
 		.message.user {
-			
 			scroll-margin-top: 20px; 
 		}
 
 		.messages-container {
-			
 			overflow-anchor: none;
 		}
 	</style>
