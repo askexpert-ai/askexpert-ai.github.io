@@ -979,6 +979,10 @@
 			</div>
 		`;
 		container.appendChild(loadingMsg);
+		container.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
 
 		try {
 			const response = await fetch(`${WORKER_URL}/api/chat`, {
@@ -1058,6 +1062,7 @@
 		} finally {
 			input.disabled = false;
 			btn.disabled = false;
+			renderMessages();
 			input.focus();
 			await checkStatus();
 		}
