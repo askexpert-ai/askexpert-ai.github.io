@@ -766,11 +766,11 @@
 			border: 0;
 			margin-top: 10px;
 			display: flex;
-			justify-content: center;
 			transition: all 0.5s ease;
 		}
 
 		.message.ai.revealed {
+			/*animation: fadeInReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;*/
 		}
 
 		.message.ai {
@@ -789,6 +789,28 @@
 
 		.messages-container {
 			overflow-anchor: none;
+		}
+		
+		.message.ai.loading-placeholder {
+			min-height: 58px; 
+			display: flex !important;
+			align-self: flex-start;
+			visibility: visible;
+			contain: layout;
+			background: transparent;
+			border: none;
+		}
+
+		.messages-container {
+			overflow-anchor: auto !important;
+		}
+
+		.message.ai.loading-placeholder.dynamic-spacer {
+			background: transparent !important;
+			border: none !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			display: block !important;
 		}
 	</style>
 	<script>
@@ -997,16 +1019,23 @@
 		}
 		histories[currentRole].push({ type: 'user', content: text });
 		renderMessages();
-		container.classList.add('is-waiting');
-		const placeholder = document.createElement('div');
-		placeholder.id = 'ai-placeholder';
-		placeholder.className = 'message ai loading-placeholder';
-		placeholder.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
-		container.appendChild(placeholder);
-		
 		const userMsgs = container.querySelectorAll('.message.user');
 		const lastUserMsg = userMsgs[userMsgs.length - 1];
+
 		if (lastUserMsg) {
+			const placeholder = document.createElement('div');
+			placeholder.id = 'ai-placeholder';
+			placeholder.className = 'message ai loading-placeholder dynamic-spacer';
+			
+			const containerHeight = container.clientHeight;
+			const msgHeight = lastUserMsg.offsetHeight;
+			const spacerHeight = containerHeight - msgHeight - 20;
+			
+			placeholder.style.height = `${spacerHeight}px`;
+			placeholder.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+			
+			container.appendChild(placeholder);
+
 			lastUserMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
 		
