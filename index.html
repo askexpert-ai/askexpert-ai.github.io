@@ -748,78 +748,6 @@
 			padding: 0.9375rem;
 			margin: 0.625rem 0;
 		}
-		
-		.messages-container.is-waiting {
-			display: flex;
-			flex-direction: column;
-		}
-
-		.message.user.last-sent {
-			align-self: flex-end;
-			margin-bottom: 0;
-		}
-
-		.message.ai.loading-placeholder {
-			align-self: stretch;
-			background: transparent;
-			border: 0;
-			margin-top: 10px;
-			display: flex;
-			transition: all 0.5s ease;
-		}
-
-		.message.ai.revealed {
-			/*animation: fadeInReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;*/
-		}
-
-		.message.ai {
-			opacity: 1;
-			transform: none;
-		}
-
-		@keyframes fadeInReveal {
-			from { opacity: 0; transform: translateY(10px); }
-			to { opacity: 1; transform: translateY(0); }
-		}
-
-		.message.user {
-			scroll-margin-top: 20px; 
-		}
-
-		.messages-container {
-			overflow-anchor: none;
-		}
-		
-		.message.ai.loading-placeholder {
-			min-height: 58px; 
-			display: flex !important;
-			align-self: flex-start;
-			visibility: visible;
-			contain: layout;
-			background: transparent;
-			border: none;
-		}
-
-		.messages-container {
-			overflow-anchor: auto !important;
-		}
-
-		.message.ai.loading-placeholder.dynamic-spacer {
-			background: transparent !important;
-			border: none !important;
-			margin: 0 !important;
-			padding: 0 !important;
-			display: block !important;
-			position: relative;
-			min-height: 58px;
-		}
-
-		.message.ai.loading-placeholder.dynamic-spacer::before {
-			content: "";
-			display: block;
-			height: 100%;
-			width: 1px;
-		}
 	</style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -1017,45 +945,14 @@
 	async function handleSend() {
 		const input = document.getElementById('user-input');
 		const btn = document.getElementById('send-btn');
-		const container = document.getElementById('chat-messages');
 		const text = input.value.trim();
 
 		if (!text) return;
-
-		let placeholder = null;
 
 		if (!histories[currentRole]) {
 			histories[currentRole] = [];
 		}
 		histories[currentRole].push({ type: 'user', content: text });
-		renderMessages();
-		const userMsgs = container.querySelectorAll('.message.user');
-		const lastUserMsg = userMsgs[userMsgs.length - 1];
-
-		if (lastUserMsg) {
-			placeholder = document.createElement('div');
-			placeholder.id = 'ai-placeholder';
-			placeholder.className = 'message ai loading-placeholder dynamic-spacer';
-			
-			const containerHeight = container.clientHeight;
-			const msgHeight = lastUserMsg.offsetHeight;
-			const spacerHeight = Math.max(containerHeight - msgHeight, 100);
-			
-			placeholder.style.height = `${spacerHeight}px`;
-			placeholder.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
-			
-			container.appendChild(placeholder);
-
-			requestAnimationFrame(() => {
-				setTimeout(() => {
-					lastUserMsg.scrollIntoView({
-						behavior: 'smooth',
-						block: 'start'
-					});
-				}, 50);
-			});
-		}
-		
 		input.value = '';
 		input.disabled = true;
 		btn.disabled = true;
@@ -1070,6 +967,19 @@
 			return msg.type === 'ai' && !isError;
 		})
 		.slice(-10);
+		renderMessages();
+			
+		const container = document.getElementById('chat-messages');
+		const loadingMsg = document.createElement('div');
+		loadingMsg.id = 'ai-loading-indicator';
+		loadingMsg.className = 'message ai loading';
+		loadingMsg.innerHTML = `
+			<div class="typing-indicator">
+				<span></span><span></span><span></span>
+			</div>
+		`;
+		container.appendChild(loadingMsg);
+		container.scrollTop = container.scrollHeight;
 
 		try {
 			const response = await fetch(`${WORKER_URL}/api/chat`, {
@@ -1083,13 +993,14 @@
 
 			const data = await response.json();
 			
-			if (placeholder) placeholder.remove();
+			if (document.getElementById('ai-loading-indicator')) {
+				document.getElementById('ai-loading-indicator').remove();
+			}
 			
 			if (response.ok && data.response) {
-				histories[currentRole].push({ type: 'ai', content: data.response, shouldAnimate: true });
+				histories[currentRole].push({ type: 'ai', content: data.response });
 				consecutiveErrors = 0;
 				await checkStatus();
-				renderMessages();
 			} else {
 				console.warn(`[Chat] Server returned error. Status: ${response.status}`, data);
 				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
@@ -1134,7 +1045,10 @@
 			}
 		} catch (error) {
 			console.error("[Chat] Network or Runtime Error:", error);
-			if (placeholder) placeholder.remove();
+		
+			if (document.getElementById('ai-loading-indicator')) {
+				document.getElementById('ai-loading-indicator').remove();
+			}
 			
 			const detailedError = await getDetailedErrorMessage(error, null);
 			
@@ -1142,10 +1056,10 @@
 				type: 'ai', 
 				content: detailedError 
 			});
-			renderMessages();
 		} finally {
 			input.disabled = false;
 			btn.disabled = false;
+			renderMessages();
 			input.focus();
 			await checkStatus();
 		}
@@ -1193,12 +1107,8 @@
 				content = escapeHtml(msg.content);
 			}
 
-			const animationClass = msg.shouldAnimate ? 'revealed' : '';
-			if (msg.shouldAnimate) {
-				msg.shouldAnimate = false;
-			}
 			return `
-				<div class="message ${msg.type} ${animationClass}">
+				<div class="message ${msg.type}">
 					<div class="msg-content">${content}</div>
 
 					<div class="copy-area">
@@ -1233,17 +1143,12 @@
 			});
 		});
 
-		const userMsgs = container.querySelectorAll('.message.user');
-		const lastUserMsg = userMsgs[userMsgs.length - 1];
+		const lastMessage = container.lastElementChild;
 
-		if (lastUserMsg) {
-			requestAnimationFrame(() => {
-				setTimeout(() => {
-					lastUserMsg.scrollIntoView({
-						behavior: 'smooth',
-						block: 'start'
-					});
-				}, 50);
+		if (lastMessage) {
+			lastMessage.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
 			});
 		}
 	}
