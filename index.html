@@ -979,7 +979,10 @@
 			</div>
 		`;
 		container.appendChild(loadingMsg);
-		container.scrollTop = container.scrollHeight;
+		container.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
 
 		try {
 			const response = await fetch(`${WORKER_URL}/api/chat`, {
@@ -1146,9 +1149,13 @@
 		const lastMessage = container.lastElementChild;
 
 		if (lastMessage) {
-			lastMessage.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start'
+			requestAnimationFrame(() => {
+				setTimeout(() => {
+					lastMessage.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}, 0);
 			});
 		}
 	}
