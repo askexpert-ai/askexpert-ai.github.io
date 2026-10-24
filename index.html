@@ -760,7 +760,6 @@
 		}
 
 		.message.ai.loading-placeholder {
-			flex-grow: 1;
 			align-self: stretch;
 			background: transparent;
 			border: 0;
@@ -1014,6 +1013,8 @@
 
 		if (!text) return;
 
+		let placeholder = null;
+
 		if (!histories[currentRole]) {
 			histories[currentRole] = [];
 		}
@@ -1023,12 +1024,13 @@
 		const lastUserMsg = userMsgs[userMsgs.length - 1];
 
 		if (lastUserMsg) {
-			const placeholder = document.createElement('div');
+			placeholder = document.createElement('div');
 			placeholder.id = 'ai-placeholder';
 			placeholder.className = 'message ai loading-placeholder dynamic-spacer';
 			
 			const containerHeight = container.clientHeight;
 			const msgHeight = lastUserMsg.offsetHeight;
+			// Ваша формула: Контейнер - Питання - 20px
 			const spacerHeight = containerHeight - msgHeight - 20;
 			
 			placeholder.style.height = `${spacerHeight}px`;
@@ -1067,7 +1069,6 @@
 			const data = await response.json();
 			
 			if (placeholder) placeholder.remove();
-			container.classList.remove('is-waiting');
 			
 			if (response.ok && data.response) {
 				histories[currentRole].push({ type: 'ai', content: data.response, shouldAnimate: true });
@@ -1119,7 +1120,6 @@
 		} catch (error) {
 			console.error("[Chat] Network or Runtime Error:", error);
 			if (placeholder) placeholder.remove();
-			container.classList.remove('is-waiting');
 			
 			const detailedError = await getDetailedErrorMessage(error, null);
 			
