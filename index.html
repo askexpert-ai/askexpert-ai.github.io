@@ -748,6 +748,21 @@
 			padding: 0.9375rem;
 			margin: 0.625rem 0;
 		}
+		
+		.message.ai.loading.invisible {
+			opacity: 0 !important;
+			pointer-events: none;
+		}
+
+		.message.ai.new-arrival {
+			opacity: 0;
+			animation: fadeIn 0.3s ease-out forwards;
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
 	</style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -996,16 +1011,78 @@
 
 			const data = await response.json();
 			
-			if (document.getElementById('ai-loading-indicator')) {
-				document.getElementById('ai-loading-indicator').remove();
-			}
-			
 			if (response.ok && data.response) {
+				const loader = document.getElementById('ai-loading-indicator');
+				const container = document.getElementById('chat-messages');
+
+				if (loader) {
+					loader.classList.add('invisible');
+				}
 				histories[currentRole].push({ type: 'ai', content: data.response });
+				const aiMsgDiv = document.createElement('div');
+				aiMsgDiv.className = 'message ai new-arrival';
+				
+				const contentHtml = parseMarkdownWithMath(data.response);
+				const msgIndex = histories[currentRole].length - 1;
+				
+				aiMsgDiv.innerHTML = `
+					<div class="scroll-anchor" style="position: absolute; top: -0.9rem;"></div>
+					<div class="msg-content">${contentHtml}</div>
+					<div class="copy-area">
+						<button class="copy-btn" onclick="copyToClipboard(this, ${msgIndex})">
+							<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+							<span>Копіювати</span>
+						</button>
+					</div>
+				`;
+				
+				if (loader) {
+					loader.after(aiMsgDiv);
+					console.log("🔍 [Debug]: Loader removed, AI message inserted.");
+				} else {
+					container.appendChild(aiMsgDiv);
+					console.log("🔍 [Debug]: AI message inserted.");
+				}
+
+				renderMathInElement(aiMsgDiv.querySelector('.msg-content'), {
+					delimiters: [
+						{ left: '$$', right: '$$', display: true },
+						{ left: '\\[', right: '\\]', display: true },
+						{ left: '$', right: '$', display: false },
+						{ left: '\\(', right: '\\)', display: false }
+					],
+					throwOnError: false,
+					ignoredTags: [
+						'script',
+						'noscript',
+						'style',
+						'textarea',
+						'pre',
+						'code'
+					]
+				});
+
+				loader.remove();
+
+				const anchor = aiMsgDiv.querySelector('.scroll-anchor');
+				if (anchor) {
+					requestAnimationFrame(() => {
+						setTimeout(() => {
+							anchor.scrollIntoView({
+								behavior: 'smooth',
+								block: 'start'
+							});
+						}, 500);
+					});
+				}
+
 				consecutiveErrors = 0;
 				await checkStatus();
 			} else {
 				console.warn(`[Chat] Server returned error. Status: ${response.status}`, data);
+				if (document.getElementById('ai-loading-indicator')) {
+					document.getElementById('ai-loading-indicator').remove();
+				}
 				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
 				histories[currentRole].push({ type: 'ai', content: detailedError });
 				consecutiveErrors++;
@@ -1059,10 +1136,10 @@
 				type: 'ai', 
 				content: detailedError 
 			});
+			renderMessages();
 		} finally {
 			input.disabled = false;
 			btn.disabled = false;
-			renderMessages();
 			input.focus();
 			await checkStatus();
 		}
@@ -1112,6 +1189,7 @@
 
 			return `
 				<div class="message ${msg.type}">
+					<div class="scroll-anchor" style="position: absolute; top: -0.9rem;"></div>
 					<div class="msg-content">${content}</div>
 
 					<div class="copy-area">
@@ -1147,15 +1225,18 @@
 		});
 
 		const lastMessage = container.lastElementChild;
-
+		
 		if (lastMessage) {
+			const anchor = lastMessage.querySelector('.scroll-anchor');
+			const target = anchor || lastMessage;
+			
 			requestAnimationFrame(() => {
 				setTimeout(() => {
-					lastMessage.scrollIntoView({
+					target.scrollIntoView({
 						behavior: 'smooth',
 						block: 'start'
 					});
-				}, 0);
+				}, 500);
 			});
 		}
 	}
