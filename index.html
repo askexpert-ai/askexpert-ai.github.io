@@ -773,39 +773,6 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
-
-<div id="privacy-modal" class="modal-overlay">
-    <div class="modal-content">
-        <h2>🛡️ Важливе зауваження</h2>
-        <p>AskExpertAI використовує штучний інтелект для надання послуг. Будь ласка, пам'ятайте:</p>
-        <ul>
-            <li><strong>Не передавайте конфіденційну інформацію:</strong> адреси, номери телефонів, паролі або повні імена тощо.</li>
-            <li><strong>Це не заміна ветеринара/лікаря/перекладача:</strong> відповіді мають інформаційний характер. У критичних ситуаціях звертайтеся до фахівця.</li>
-            <li><strong>Дані зберігаються:</strong> історія чату зберігається для покращення якості відповідей.</li>
-        </ul>
-        <button onclick="acceptPrivacy()" class="btn-accept">Я розумію та згоден</button>
-    </div>
-</div>
-
-<footer class="site-footer">
-  <a href="#" id="open-privacy"></a>
-</footer>
-
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const modal = document.getElementById('privacy-modal');
-		const openBtn = document.getElementById('open-privacy');
-	
-		openBtn.addEventListener('click', (e) => {
-			e.preventDefault();
-			modal.style.display = 'flex';
-		});
-	});
-
-	function acceptPrivacy() {
-		document.getElementById('privacy-modal').style.display = 'none';
-	}
-</script>
 <div class="browser-container">
     <div class="tabs-header">
         <div class="tab active" onclick="switchTab('vet')" data-role="vet">🐾 Ветеринар</div>
