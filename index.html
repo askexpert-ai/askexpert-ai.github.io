@@ -1381,7 +1381,7 @@
 			const data = await res.json();
 
 			if (data.remaining <= 0) {
-				return "🛑 **Денний ліміт вичерпано.** Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!";
+				return "🛑 **Денний ліміт вичерпано.** Ви використали всі 3 безкоштовні запити на сьогодні. Повертайтеся завтра!";
 			}
 		} catch (e) {
 			return "🔌 **Сервер недоступний.** Не вдалося зв'язатися з обробником.";
@@ -1716,7 +1716,7 @@
 			const data = await res.json();
 
 			if (data.remaining <= 0) {
-				document.getElementById('api-status').innerHTML = `❌ <strong>Доступ обмежено:</strong> 🛑 Денний ліміт вичерпано. Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!`;
+				document.getElementById('api-status').innerHTML = `❌ <strong>Доступ обмежено:</strong> 🛑 Денний ліміт вичерпано. Ви використали всі 3 безкоштовні запити на сьогодні. Повертайтеся завтра!`;
 				statusBar.style.color = "#c62828";
 				input.disabled = true;
 				btn.disabled = true;
