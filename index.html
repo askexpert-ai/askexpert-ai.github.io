@@ -588,7 +588,7 @@
 		
 		button#send-btn {
 			padding: calc(10px * var(--scale)) calc(20px * var(--scale));
-			font-size: 0.75rem;;
+			font-size: 0.75rem;
 		}
 		
 		:root {
@@ -763,6 +763,436 @@
 			from { opacity: 0; }
 			to { opacity: 1; }
 		}
+		
+		.welcome-overlay {
+		    display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.7);
+			align-items: center;
+			justify-content: center;
+			z-index: 1000;
+			backdrop-filter: blur(4px);
+		}
+
+		.welcome-content {
+			background: white;
+			max-width: 25rem;
+			text-align: center;
+			box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.5);
+			margin: 1.25rem;
+			max-height: 85vh;
+			overflow-y: auto;
+		}
+
+		.welcome-content h2 {
+			color: #0fab00;
+			margin-top: 0;
+		}
+
+		.welcome-content p {
+			font-size: 1.1rem;
+			line-height: 1.5;
+			color: #333;
+		}
+
+		.welcome-btn {
+			background: #2b2d42;
+			color: white;
+			border: none;
+			padding: 0.75rem 1.5625rem;
+			border-radius: 0;
+			font-size: 1rem;
+			font-weight: bold;
+			cursor: pointer;
+			margin-top: 0.9375rem;
+			margin-left: 0;
+		}
+		
+		.welcome-btn:hover {
+			background: #2b2d42;
+		}
+
+		.welcome-content .laurel-border {
+			background-color: #ffffff !important;
+			background-clip: padding-box;
+			border-radius: 0 !important;
+			border-style: solid;
+			border-width: 2.5rem;
+			border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%230fab00'%3E%3C!-- ВЕЛИКІ ЗІРКИ (Кути) --%3E%3Cpath d='M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' /%3E%3Ccircle cx='20' cy='20' r='3' fill='%232b2d42'/%3E%3Cpath d='M100 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' /%3E%3Ccircle cx='100' cy='20' r='3' fill='%232b2d42'/%3E%3Cpath d='M20 82l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' /%3E%3Ccircle cx='20' cy='100' r='3' fill='%232b2d42'/%3E%3Cpath d='M100 82l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' /%3E%3Ccircle cx='100' cy='100' r='3' fill='%232b2d42'/%3E%3C!-- МАЛІ ЗІРКИ (Сторони) --%3E%3Cpath d='M60 14l2 4 4 2-4 2-2 4-2-4-4-2 4-2z' /%3E%3Cpath d='M60 94l2 4 4 2-4 2-2 4-2-4-4-2 4-2z' /%3E%3Cpath d='M14 60l4-2 2-4 2 4 4 2-4 2-2 4-2-4z' /%3E%3Cpath d='M94 60l4-2 2-4 2 4 4 2-4 2-2 4-2-4z' /%3E%3C/g%3E%3C/svg%3E");
+			border-image-slice: 40;
+			border-image-repeat: round;
+			max-width: 35rem;
+			text-align: center;
+			margin: auto;
+			position: relative;
+			max-height: 100%;
+		}
+
+		.laurel-border::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			max-width: 25rem;
+			height: 18.75rem;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg%3E%3Cpath fill='%230fab00' fill-opacity='0.25' stroke='%230fab00' stroke-opacity='0.15' stroke-width='2.5' stroke-linejoin='round' d='M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' /%3E%3Ccircle cx='20' cy='20' r='3' fill='%230fab00' fill-opacity='0.3'/%3E%3C/g%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			z-index: 1;
+			pointer-events: none;
+			will-change: transform;
+		}
+		
+		.welcome-content {
+			position: relative;
+			background: #ffffff;
+			width: 100%;
+			text-align: center;
+			overflow-x: hidden;
+		}
+
+		.welcome-content-before {
+			border: 2px solid #0fab00;
+			pointer-events: none;
+			overflow-y: auto;
+			scrollbar-width: none;
+			margin: 0.75rem;
+		}
+
+		.welcome-content h2 {
+			font-size: 1.6rem;
+			color: #2b2d42;
+		}
+
+		.welcome-content p {
+			color: #4a5568;
+			margin-bottom: 2.5rem;
+		}
+
+		.memorial-name {
+			display: block;
+			font-size: 1.6rem;
+			font-weight: 800;
+			background: linear-gradient(45deg, #0fab00, #0a8a00);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			margin-top: 10px;
+			filter: drop-shadow(0 2px 4px rgba(15, 171, 0, 0.2));
+		}
+
+		.welcome-btn {
+			background: #2b2d42;
+			color: #fff;
+			border: none;
+			padding: 1rem 1rem;
+			font-size: 1rem;
+			font-weight: 700;
+			letter-spacing: 1px;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+			cursor: pointer;
+			pointer-events: auto; 
+		}
+
+		.glory-symbol {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 300px;
+			height: 300px;
+			z-index: -1;
+			opacity: 0.05;
+			pointer-events: none;
+		}
+		
+		.laurel-border::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 200px;
+			height: 200px;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg%3E%3Cpath fill='%230fab00' fill-opacity='0.4' stroke='%230fab00' stroke-opacity='0.2' stroke-width='1.5' d='M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' /%3E%3Ccircle cx='20' cy='20' r='2' fill='%230fab00' fill-opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			z-index: 1;
+			pointer-events: none;
+			
+			animation: corePulse 3s ease-in-out infinite;
+		}
+		
+		.radio-waves {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			max-width: 25rem;
+			height: 18.75rem;
+			width: 100%;
+			z-index: 1;
+			pointer-events: none;
+		}
+		
+		.radio-waves span {
+			position: absolute;
+			inset: 0;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='none' stroke='%230fab00' stroke-opacity='0.5' stroke-width='0.2' d='M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' /%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			opacity: 0;
+			animation: radioWaveContinuous 3s linear infinite;
+		}
+
+		.radio-waves span:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		.radio-waves span:nth-child(2) {
+			animation-delay: -1s;
+		}
+
+		.radio-waves span:nth-child(3) {
+			animation-delay: -2s;
+		}
+
+		@keyframes radioWaveContinuous {
+			0% {
+				transform: scale(1);
+				opacity: 0;
+			}
+			10% {
+				opacity: 1;
+			}
+			100% {
+				transform: scale(3.5);
+				opacity: 0;
+			}
+		}
+
+		.laurel-border::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 200px;
+			height: 200px;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%230fab00' fill-opacity='0.7' d='M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' /%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			z-index: 10;
+			pointer-events: none;
+		}
+
+		.laurel-border::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			max-width: 25rem;
+			height: 18.75rem;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg%3E%3Cpath fill='%230fab00' fill-opacity='0.25' stroke='%230fab00' stroke-opacity='0.15' stroke-width='2.5' stroke-linejoin='round' d='M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' /%3E%3Ccircle cx='20' cy='20' r='3' fill='%230fab00' fill-opacity='0.3'/%3E%3C/g%3E%3C/svg%3E");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: contain;
+			z-index: 1;
+			pointer-events: none;
+			will-change: transform;
+		}				
+				
+		:root {
+			--glory-gold: #d4af37;
+			--glory-green: #0a5c0a;
+			--memorial-bg: #ffffff;
+		}
+
+		.laurel-border {
+			filter: drop-shadow(0 0 0.3125rem rgba(15, 171, 0, 0.2));
+		}
+
+		.memorial-name {
+			display: block;
+			font-family: 'Roboto', 'Arial', serif;
+			font-size: 1.2rem;
+			font-weight: 800;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			margin: 1.6rem 0;
+		}
+
+		.welcome-content p i {
+			font-family: 'Georgia', 'Roboto', 'Arial', serif;
+			font-size: 1.15rem;
+			color: #2d3436;
+			display: block;
+			padding: 0 0.625rem;
+		}
+
+		.welcome-btn {
+			text-transform: uppercase;
+			letter-spacing: 0.125rem;
+			user-select: none;
+		}
+		
+		.memorial-name {
+			display: block;
+			font-family: 'Georgia', serif;
+			font-size: 1.8rem;
+			font-weight: 800;
+			background: linear-gradient(135deg, #0a8a00 0%, #0fab00 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			margin: 1rem 0;
+			text-shadow: 0 0.125rem 0.625rem rgba(212, 175, 55, 0.2);
+			letter-spacing: 0.0625rem;
+		}
+
+		.welcome-content-before {
+			border: 3px double #0fab00;
+			margin: 0.75rem;
+			background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+		}
+
+		.welcome-content p i {
+			color: #5d6d7e;
+			line-height: 1.6;
+		}
+
+		@keyframes honestyPulse {
+			0% { opacity: 0.7; }
+			50% { opacity: 1; }
+			100% { opacity: 0.7; }
+		}
+
+		.laurel-border::before {
+			animation: corePulse 4s ease-in-out infinite, honestyPulse 5s infinite;
+		}
+
+		.memorial-name {    
+			color: rgba(15, 171, 0, 0.9); 
+			text-align: center;
+			text-shadow: 0 0 0.9375rem rgba(15, 171, 0, 0.3);
+			letter-spacing: 0.0625rem;
+		}
+
+		#status-bar {
+			display: flex !important;
+			justify-content: space-between;
+			align-items: center;
+			position: relative;
+		}
+
+		.memorial-signature {
+			display: inline-flex;
+			font-size: 0.6rem;
+			color: #5d6d7e;
+			user-select: none;
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			gap: 0.04375rem;
+			width: 7.5rem;
+			justify-content: center;
+			height: 2.1rem;
+			align-items: end;
+			scrollbar-width: none;
+			overflow-x: visible;
+			overflow-y: hidden;
+		}
+
+		.memory-name {
+			font-family: 'Roboto', sans-serif;
+			color: #0fab00;
+			font-weight: 800;
+			text-transform: uppercase;
+			filter: drop-shadow(0 0 0.125rem rgba(15, 171, 0, 0.2));
+		}
+
+		.memory-star {
+			width: 0.875rem;
+			height: 0.875rem;
+			fill: #0fab00;
+			animation: memoryGlow 4s ease-in-out infinite;
+		}
+
+		@keyframes memoryGlow {
+			0%, 100% { 
+				transform: scale(1.1); 
+				opacity: 1; 
+				filter: drop-shadow(0 0 0.25rem #0fab00);
+			}
+			50% { 
+				transform: scale(1.1); 
+				opacity: 1; 
+				filter: drop-shadow(0 0 0.25rem #0fab00);
+			}
+		}
+		
+		#season-weather-mini {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: 2;
+		}
+
+		.mini-particle {
+			position: absolute;
+			top: -1.25rem;
+			will-change: transform;
+			animation: miniFall linear infinite;
+			line-height: 1;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		@keyframes miniFall {
+			0% { 
+				transform: translateY(0) rotate(0deg) translateX(0); 
+				opacity: 0;
+			}
+			10% { opacity: 0.8; }
+			90% { opacity: 0.8; }
+			100% {
+				transform: translateY(4.0625rem) rotate(360deg) translateX(0.9375rem); 
+				opacity: 0.8;
+			}
+		}
+
+		@keyframes miniRainFall {
+			0% { 
+				transform: translateY(0) translateX(-0.9375rem) skewX(15deg); 
+				opacity: 0;
+			}
+			10% { opacity: 0.8; }
+			90% { opacity: 0.8; }
+			100% { 
+				transform: translateY(4.0625rem) translateX(1.5625rem) skewX(15deg); 
+				opacity: 0;
+			}
+		}
+
+		[data-season="autumn"] .mini-particle { color: #d35400; }
+		[data-season="winter"] .mini-particle { color: #3498db; }
+		[data-season="spring"] .mini-particle { color: #ffb7c5; }
+		[data-season="summer"] .mini-particle { color: #3498db; }
 	</style>
 	<script>
 		window.currentRole = localStorage.getItem('lastSelectedRole') || 'vet';
@@ -781,9 +1211,20 @@
     </div>
 
     <div class="chat-window">
-		<div id="status-bar" style="background: #f8f9fa; padding: 0.5rem 1.25rem; font-size: 0.875rem; border-bottom: 1px solid #ddd; color: #666;">
-			⏳ Перевірка доступності сервісу...
+		<div id="status-bar" style="background: rgb(248, 249, 250); padding: 0.5rem 1.25rem; font-size: 0.875rem; border-bottom: 1px solid rgb(221, 221, 221); color: rgb(46, 125, 50);">
+			<span id="api-status">⏳ Перевірка доступності сервісу...</span>
+			
+			<div class="memorial-signature" role="note" aria-label="Пам'яті Габріель">
+			    <div id="season-weather-mini" style="position: absolute; right: 0; height: 2.1rem; pointer-events: none; z-index: 5; left: 0.625rem;"></div>
+				<span class="memorial-label">Пам'яті&nbsp;</span>
+				<span class="memory-name">Габріель</span>
+				<svg class="memory-star" viewBox="0 0 40 40" aria-hidden="true">
+					<path d="M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z" />
+					<circle cx="20" cy="20" r="3" />
+				</svg>
+			</div>
 		</div>
+
         <div id="chat-messages" class="messages-container">
             <div class="message ai">Вітаю! Я ваш персональний помічник. Оберіть вкладку вище, щоб змінити мою спеціалізацію.</div>
         </div>
@@ -794,6 +1235,31 @@
         </div>
     </div>
 </div>
+
+<div id="welcomeModal" class="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="welcome-content">
+        <div class="welcome-content-before">
+            <div class="laurel-border">
+                <div class="radio-waves">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <h2 id="modalTitle" style="text-transform: uppercase; font-size: 1.6rem; font-family: 'Times New Roman', serif;">Вітаємо!</h2>
+                
+                <p>
+                    <i>Цей сервіс створено на</i>
+                    <b style="display: block; margin: 0.625rem 0; font-size: 1.2rem; color: #1a1c2c;">Честь, Пам'ять і Славу</b>
+                    <i>моєї вірної до смерті жертовної єдиної подруги і дружини</i>
+                    <span class="memorial-name">Габріель (Гавриїли)</span>
+                </p>
+                
+                <button class="welcome-btn" onclick="closeWelcome();" aria-label="Закрити вітання">Прийняти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
 	let consecutiveErrors = 0;
@@ -866,7 +1332,7 @@
 		});
 
 		renderMessages();
-		if (typeof applyScaling === 'function') applyScaling();
+		if (typeof applyScaling === 'function') window.applyScaling();
 
 		const startTime = Date.now();
 		const timeout = 1000;
@@ -1029,7 +1495,7 @@
 					]
 				});
 
-				loader.remove();
+				loader?.remove();
 
 				const anchor = aiMsgDiv.querySelector('.scroll-anchor');
 				if (anchor) {
@@ -1224,7 +1690,7 @@
 		const input = document.getElementById('user-input');
 
 		if (!isOnline) {
-			statusBar.innerHTML = `📡 <strong>Відсутній інтернет:</strong> Перевірте з'єднання.`;
+			document.getElementById('api-status').innerHTML = `📡 <strong>Відсутній інтернет:</strong> Перевірте з'єднання.`;
 			statusBar.style.backgroundColor = "#ffebee";
 			statusBar.style.color = "#c62828";
 			btn.disabled = true;
@@ -1240,7 +1706,7 @@
 		const statusBar = document.getElementById('status-bar');
 		const input = document.getElementById('user-input');
 		const btn = document.getElementById('send-btn');
-		statusBar.innerHTML = '⏳ Перевірка доступності сервісу...';
+		document.getElementById('api-status').innerHTML = '⏳ Перевірка доступності сервісу...';
 		btn.disabled = true;
 		input.disabled = true;
 		try {
@@ -1250,7 +1716,7 @@
 			const data = await res.json();
 
 			if (data.remaining <= 0) {
-				statusBar.innerHTML = `❌ <strong>Доступ обмежено:</strong> 🛑 Денний ліміт вичерпано. Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!`;
+				document.getElementById('api-status').innerHTML = `❌ <strong>Доступ обмежено:</strong> 🛑 Денний ліміт вичерпано. Ви використали всі 10 безкоштовних запитів на сьогодні. Повертайтеся завтра!`;
 				statusBar.style.color = "#c62828";
 				input.disabled = true;
 				btn.disabled = true;
@@ -1260,7 +1726,7 @@
             
 			let statusParts = [];
 			if (data.remaining !== undefined) {
-				statusBar.innerHTML = `✅ Доступно запитів: <strong>${data.remaining}</strong>`;
+				document.getElementById('api-status').innerHTML = `✅ Доступно запитів: <strong>${data.remaining}</strong>`;
 				statusBar.style.color = "#2e7d32";
 				statusBar.style.backgroundColor = "#f8f9fa";
 				input.disabled = false;
@@ -1274,7 +1740,7 @@
 			if (error.name === 'TimeoutError') {
 				errorMsg = `❌ <strong>Доступ обмежено:</strong> 🔌 Сервер недоступний. Не вдалося зв'язатися з обробником запитів. Можливо, сервіс на технічному обслуговуванні.`;
 			}
-			statusBar.innerHTML = `❌ ${errorMsg}`;
+			document.getElementById('api-status').innerHTML = `❌ ${errorMsg}`;
 			statusBar.style.backgroundColor = "#ffebee";
 			statusBar.style.color = "#c62828";
 			input.disabled = true;
@@ -1306,6 +1772,109 @@
 		window.addEventListener('resize', window.applyScaling);
 		window.applyScaling();
 	})();
+
+	function getCurrentSeasonId() {
+		const now = new Date();
+		const month = now.getMonth();
+		const year = now.getFullYear();
+
+		let season;
+		if (month === 11 || month <= 1) season = 0;
+		else if (month <= 4) season = 1;
+		else if (month <= 7) season = 2;
+		else season = 3;
+
+		return `${season}_${year}`;
+	}
+
+	function closeWelcome() {
+		const modal = document.getElementById('welcomeModal');
+		if (modal) {
+			modal.style.display = 'none';
+			localStorage.setItem('welcomeSeasonKey', getCurrentSeasonId());
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const modal = document.getElementById('welcomeModal');
+		const savedSeason = localStorage.getItem('welcomeSeasonKey');
+		const currentSeason = getCurrentSeasonId();
+		const titleElement = modal.querySelector('h2');
+		
+		if (!savedSeason || savedSeason !== currentSeason) {
+			if (modal) {
+				if (titleElement) {
+					if (!savedSeason) {
+						titleElement.textContent = 'Вітаємо!';
+					} else {
+						titleElement.textContent = 'Вітаємо з Новим сезоном!';
+					}
+				}
+				modal.style.display = 'flex';
+			}
+		}
+	});
+
+	function initMiniWeather() {
+		const container = document.getElementById('season-weather-mini');
+		if (!container) return;
+
+		const month = new Date().getMonth() + 1;
+		let season = 'autumn', symbols = ['🍂', '🍁'], isSummerRain = false, isWinterSnow = false;
+
+		if ([12, 1, 2].includes(month)) { season = 'winter'; symbols = ['❄']; isWinterSnow = true; }
+		else if ([3, 4, 5].includes(month)) { season = 'spring'; symbols = ['🌸']; }
+		else if ([6, 7, 8].includes(month)) { season = 'summer'; isSummerRain = true; }
+
+		document.body.setAttribute('data-season', season);
+		container.innerHTML = '';
+
+		function randomizeAndStart(p, isFirstTime = false) {
+			p.style.animation = 'none';
+			void p.offsetWidth;
+
+			p.style.left = (Math.random() * 98) + '%';
+			
+			let duration, animName;
+			if (isSummerRain) {
+				animName = 'miniRainFall';
+				duration = (1.5 + Math.random() * 1.0) + 's';
+			} else {
+				animName = 'miniFall';
+				duration = (6 + Math.random() * 3) + 's';
+				p.style.fontSize = (0.5625 + Math.random() * 0.0625) + 'rem';
+			}
+
+			const delay = isFirstTime ? (Math.random() * 25) + 's' : '0s';
+			
+			p.style.animation = `${animName} ${duration} linear ${delay} infinite`;
+		}
+
+		const particleCount = (isSummerRain || isWinterSnow) ? 50 : 25; 
+
+		for (let i = 0; i < particleCount; i++) {
+			const p = document.createElement('div');
+			p.className = 'mini-particle';
+			
+			if (isSummerRain) {
+				p.innerHTML = `<svg width="2" height="12" viewBox="0 0 2 12"><rect width="1.2" height="12" rx="0.6" fill="#3498db" opacity="0.6" /></svg>`;
+			} else {
+				p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+			}
+
+			randomizeAndStart(p, true);
+			p.addEventListener('animationiteration', () => randomizeAndStart(p, false));
+			container.appendChild(p);
+		}
+	}
+
+	document.addEventListener('visibilitychange', () => {
+		if (document.visibilityState === 'visible') {
+			initMiniWeather();
+		}
+	});
+
+	document.addEventListener('DOMContentLoaded', initMiniWeather);
 
 	initialisation();
 </script>
