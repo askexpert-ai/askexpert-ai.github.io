@@ -1261,29 +1261,30 @@
 </div>
 
 <script>
-	async function loadGeorgiaFont() {
-	  const fontName = '12px Georgia';
-	  const TIMEOUT_MS = 2500;
-	  
-	  if (!document.fonts.check(fontName)) {
-		const fontLink = document.createElement('link');
-		fontLink.rel = 'stylesheet';
-		fontLink.href = 'https://fonts.googleapis.com/css2?family=Georgia&display=swap';
-		document.head.appendChild(fontLink);
+	async function applyGeorgiaFont() {
+		const fontName = 'Georgia';
+		const TIMEOUT_MS = 2500;
+
+		if (!document.fonts.check(`12px ${fontName}`)) {
+			const link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.href = 'https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+			document.head.appendChild(link);
+		}
 
 		try {
-		  const fontLoadingTimeout = new Promise((_, reject) => 
-			setTimeout(() => reject(new Error('Timeout')), TIMEOUT_MS)
-		  );
-
-		  await Promise.race([document.fonts.ready, fontLoadingTimeout]);
-		} catch (error) {
-		  console.warn('Припинено очікування шрифту:', error.message);
+			const timeout = new Promise((_, reject) => setTimeout(reject, TIMEOUT_MS));
+			await Promise.race([document.fonts.load(`12px ${fontName}`), timeout]);
+			const elements = document.querySelectorAll('.welcome-content p i');
+			elements.forEach(el => {
+				el.style.fontFamily = "'Georgia', 'Tinos', 'Roboto', 'Arial', serif";
+			});
+		} catch (e) {
+			console.warn('Tinos не завантажена, залишаємо Roboto');
 		}
-	  }
 	}
 
-	loadGeorgiaFont();
+applyGeorgiaFont();
 </script>
 
 <script>
