@@ -1260,6 +1260,31 @@
     </div>
 </div>
 
+<script>
+	async function loadGeorgiaFont() {
+	  const fontName = '12px Georgia';
+	  const TIMEOUT_MS = 2500;
+	  
+	  if (!document.fonts.check(fontName)) {
+		const fontLink = document.createElement('link');
+		fontLink.rel = 'stylesheet';
+		fontLink.href = 'https://fonts.googleapis.com/css2?family=Georgia&display=swap';
+		document.head.appendChild(fontLink);
+
+		try {
+		  const fontLoadingTimeout = new Promise((_, reject) => 
+			setTimeout(() => reject(new Error('Timeout')), TIMEOUT_MS)
+		  );
+
+		  await Promise.race([document.fonts.ready, fontLoadingTimeout]);
+		} catch (error) {
+		  console.warn('Припинено очікування шрифту:', error.message);
+		}
+	  }
+	}
+
+	loadGeorgiaFont();
+</script>
 
 <script>
 	let consecutiveErrors = 0;
