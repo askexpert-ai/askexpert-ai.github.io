@@ -1089,6 +1089,12 @@
 			text-shadow: 0 0 0.9375rem rgba(15, 171, 0, 0.3);
 			letter-spacing: 0.0625rem;
 		}
+		
+		@font-face {
+			font-family: 'Georgia';
+			src: local('Georgia');
+			font-display: swap;
+		}
 
 		#status-bar {
 			display: flex !important;
@@ -1902,7 +1908,17 @@ applyGeorgiaFont();
 
 	document.addEventListener('DOMContentLoaded', initMiniWeather);
 
-	initialisation();
+	// Замість простого initialisation();
+	async function startApp() {
+		// Чекаємо на шрифт і на ініціалізацію одночасно
+		await Promise.all([
+			applyGeorgiaFont(),
+			initialisation()
+		]);
+		// Тепер сторінка точно видима і зі шрифтами
+	}
+
+	startApp();
 </script>
 </body>
 </html>
