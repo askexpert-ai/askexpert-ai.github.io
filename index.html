@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -1089,22 +1090,12 @@
 			text-shadow: 0 0 0.9375rem rgba(15, 171, 0, 0.3);
 			letter-spacing: 0.0625rem;
 		}
-/* 1. Оголошуємо Georgia як ім'я, але підкладаємо Tinos для мобільних */
-@font-face {
-    font-family: 'Georgia-Visual'; /* Унікальне ім'я, щоб уникнути конфліктів з системним */
-    src: local('Georgia'), 
-         url('https://fonts.gstatic.com/s/tinos/v28/u-470q2lgw1JojMMn7FPWEMu.woff2') format('woff2');
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-}
-
-/* 2. Застосовуємо до елементів */
-.welcome-content p i {
-    font-family: 'Georgia-Visual', 'Georgia', 'Roboto', 'Arial', serif !important;
-    font-style: italic;
-}
-
+		
+		@font-face {
+			font-family: 'Georgia';
+			src: local('Georgia');
+			font-display: swap;
+		}
 
 		#status-bar {
 			display: flex !important;
@@ -1277,32 +1268,28 @@
 </div>
 
 <script>
-async function applyGeorgiaFont() {
-    const fontName = 'Georgia-Visual';
-    const TIMEOUT_MS = 2500;
+	async function applyGeorgiaFont() {
+		const fontName = 'Georgia';
+		const TIMEOUT_MS = 2500;
 
-    // Додаємо лінк на Tinos (Google Fonts)
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Tinos:ital@1&display=swap';
-    document.head.appendChild(link);
+		if (!document.fonts.check(`12px ${fontName}`)) {
+			const link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.href = 'https://fonts.googleapis.com/css2?family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+			document.head.appendChild(link);
+		}
 
-    try {
-        const timeout = new Promise((_, reject) => setTimeout(reject, TIMEOUT_MS));
-        // Чекаємо саме на італік версію, яку ви використовуєте в <i>
-        await Promise.race([document.fonts.load(`italic 12px ${fontName}`), timeout]);
-        
-        console.log('Шрифт Georgia-Visual активовано');
-        
-        // Примусовий рендеринг для гарантії
-        const elements = document.querySelectorAll('.welcome-content p i, .memorial-name');
-        elements.forEach(el => {
-            el.style.fontFamily = "'Georgia-Visual', serif";
-        });
-    } catch (e) {
-        console.warn('Фолбек: Georgia не завантажилась, використовуємо системний serif');
-    }
-}
+		try {
+			const timeout = new Promise((_, reject) => setTimeout(reject, TIMEOUT_MS));
+			await Promise.race([document.fonts.load(`12px ${fontName}`), timeout]);
+			const elements = document.querySelectorAll('.welcome-content p i');
+			elements.forEach(el => {
+				el.style.fontFamily = "'Georgia', 'Tinos', 'Roboto', 'Arial', serif";
+			});
+		} catch (e) {
+			console.warn('Tinos не завантажена, залишаємо Roboto');
+		}
+	}
 </script>
 
 <script>
