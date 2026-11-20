@@ -1036,7 +1036,7 @@
 		}
 
 		.welcome-content p i {
-			font-family: 'Georgia', 'Roboto', 'Arial', serif;
+			font-family: 'Georgia', 'Liberation Serif Italic', 'Roboto', 'Arial', serif;
 			font-size: 1.15rem;
 			color: #2d3436;
 			display: block;
@@ -1794,7 +1794,7 @@
 		}
 	}
 
-	document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener('DOMContentLoaded', async () => {
 		const modal = document.getElementById('welcomeModal');
 		const savedSeason = localStorage.getItem('welcomeSeasonKey');
 		const currentSeason = getCurrentSeasonId();
@@ -1808,6 +1808,23 @@
 					} else {
 						titleElement.textContent = 'Вітаємо з Новим сезоном!';
 					}
+				}
+				try {
+				  const font = new FontFace(
+					'Liberation Serif Italic', 
+					"url('LiberationSerif-Italic.ttf') format('truetype')",
+				    {
+					  weight: '400',
+					  style: 'normal',
+				      display: 'swap'
+				    }
+				  );
+
+				  const loadedFont = await font.load();
+
+				  document.fonts.add(loadedFont);
+				} catch (error) {
+				  console.error('Не вдалося завантажити шрифт Liberation Serif Italic, використовується стандартний:', error);
 				}
 				modal.style.display = 'flex';
 			}
