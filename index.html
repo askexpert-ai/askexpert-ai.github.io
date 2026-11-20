@@ -1352,6 +1352,8 @@
 		};
 
 		await waitForCorrectTab();
+		
+		await welcomeModal();
 
 		await new Promise(res => setTimeout(res, 20));
 
@@ -1794,7 +1796,7 @@
 		}
 	}
 
-	document.addEventListener('DOMContentLoaded', async () => {
+	async function welcomeModal() {
 		const modal = document.getElementById('welcomeModal');
 		const savedSeason = localStorage.getItem('welcomeSeasonKey');
 		const currentSeason = getCurrentSeasonId();
@@ -1829,7 +1831,7 @@
 				modal.style.display = 'flex';
 			}
 		}
-	});
+	}
 
 	function initMiniWeather() {
 		const container = document.getElementById('season-weather-mini');
@@ -1892,7 +1894,11 @@
 
 	document.addEventListener('DOMContentLoaded', initMiniWeather);
 
-	initialisation();
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initialisation);
+	} else {
+		initialisation();
+	}
 </script>
 </body>
 </html>
