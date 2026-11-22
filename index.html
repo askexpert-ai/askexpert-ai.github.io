@@ -701,6 +701,59 @@
 		button#send-btn {
 			padding: 0.625rem 1.25rem;
 		}
+		
+		.help-modal-overlay {
+			position: fixed;
+			top: 0; left: 0; width: 100%; height: 100%;
+			background: rgba(0, 0, 0, 0.85);
+			display: flex; justify-content: center; align-items: center;
+			z-index: 9999;
+			backdrop-filter: blur(5px);
+			display: none;
+		}
+
+		.help-modal-content {
+			background: white;
+			padding: 30px 30px 0 30px;
+            padding-bottom: 0 !important;
+			border-radius: 15px;
+			max-width: 31.25rem;
+			width: 85%;
+			text-align: left;
+			box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+			max-height: 85vh;
+			overflow-y: auto;
+			position: relative;
+		}
+		
+		.help-modal-content::after {
+			content: "";
+			display: block;
+			/* Створюємо штучний простір під кнопкою */
+			height: 30px; 
+			width: 100%;
+			/* Гарантуємо, що він не стиснеться */
+			flex-shrink: 0; 
+		}
+
+		.help-modal-content h2 { color: #2c3e50; margin-top: 0; text-align: center; }
+		.help-modal-content ul { padding-left: 20px; color: #555; }
+		.help-modal-content li { margin-bottom: 10px; }
+
+		.btn-accept-help {
+			width: 100%;
+			padding: 12px;
+			background: #3498db;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: bold;
+			font-size: 1.1em;
+			margin-top: 15px;
+		}
+
+		.btn-accept-help:hover { background: #2980b9; }
 
 		.modal-content {
 			padding: 1.25rem;
@@ -1202,6 +1255,21 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const helpModal = document.getElementById('help-modal');
+  const openHelpBtn = document.getElementById('open-help');
+  
+  openHelpBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    helpModal.style.display = 'flex';
+  });
+});
+
+function acceptHelp() {
+    document.getElementById('help-modal').style.display = 'none';
+}
+</script>
 <div class="browser-container">
     <div class="tabs-header">
         <div class="tab active" onclick="switchTab('vet')" data-role="vet">🐾 Ветеринар</div>
@@ -1234,7 +1302,34 @@
         </div>
     </div>
 </div>
-
+<div id="help-modal" class="help-modal-overlay">
+    <div class="help-modal-content">
+        <h2>Ми допомагаємо</h2>
+		<p>Найстрашніше у людській біді, не голод і не холод. Найстрашніше, це стати невидимим.</p>
+		<p>І ось, епоха безпорадності минула. Коли на вулиці холодно, або ви бачите людину в біді, яка не знає, куди піти, то щоб врятувати її життя, не потрібні для цього мільйони доларів, не обов’язково відкривати благодійний фонд, не потрібно закуповувати тонни їжі чи будувати притулки. Ви можете допомогти їй за 10 секунд. Достатньо просто мати посилання одного вебсайту в закладках свого телефону.</p>
+		<p>Ми з командою разом створили інтерактивну карту проєкту «Промінь Надії». На одній мапі вже зібрано понад 250 перевірених точок по всій Україні, де повертають людську гідність, і безкоштовно надають:</p>
+		<ul>
+            <li><strong>🏠 Нічліг та безпечний прихисток,</strong> де можна безпечно переночувати в теплі.</li>
+            <li><strong>🍲 Гарячу їжу та обіди,</strong> де наллють гарячого супу та нагодують.</li>
+            <li><strong>💊 Необхідні ліки,</strong> де нададуть базову медичну підтримку.</li>
+			<li><strong>🚿 Можливість прийняти душ і привести себе до ладу</strong>, і знову відчути себе людиною.</li>
+			<li><strong>👕 Теплий одяг та речі першої необхідності,</strong> щоб зігрітися у холоди.</li>
+        </ul>
+		<p>Але найкрутіше те, що ми можемо наповнювати цю карту разом!</p>
+		<p>Знаєте у своєму місті благодійну їдальню, церкву, шелтер чи пункт видачі речей, якого ще немає на мапі? Натисніть кнопку «➕ Додати точку допомоги» прямо на вебсайті, і ваша підказка може врятувати життя сотень людей вже сьогоднішньої ночі. Бачите, що інформація застаріла, напишіть коментар і оновіть її, це допоможе тримати інформацію оновленою.</p>
+		<p>Зробіть дві прості дії прямо зараз:</p>
+        <ul>
+            <li><strong>Збережіть цей вебсайт у закладки:</strong> <a href="https://prytulok.github.io/">https://prytulok.github.io/</a></li>
+            <li><strong>Зробіть репост цього посилання в соціальних мережах,</strong> щоб про карту дізналися якомога більше людей.</li>
+        </ul>
+		<p>Нам не під силу скасувати несправедливість світу одним розчерком пера, проте кожному з нас під силу стати навігатором для того, хто заблукав у темряві власної долі.</p>
+		<p>Добро не вимагає великих грошей. Воно вимагає небайдужості. Приєднуйтесь!</p>
+        <button onclick="acceptHelp()" class="btn-accept-help">Дякую!</button>
+    </div>
+</div>
+<footer class="site-footer">
+  <a href="#" id="open-help">Ми допомагаємо. Дізнатися більше</a>
+</footer>
 <div id="welcomeModal" class="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="welcome-content">
         <div class="welcome-content-before">
