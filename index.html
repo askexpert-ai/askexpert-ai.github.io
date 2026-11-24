@@ -1448,6 +1448,8 @@ function acceptHelp() {
 		await new Promise(res => setTimeout(res, 20));
 
 		document.documentElement.style.visibility = 'visible';
+		
+		await registerVisit();
 	}
 
 	async function getDetailedErrorMessage(jsError, serverData = null) {
@@ -1843,6 +1845,25 @@ function acceptHelp() {
 	}
 
 	checkStatus();
+	
+	async function registerVisit() {
+		try {
+			const role = window.currentRole || localStorage.getItem('lastSelectedRole') || 'vet';
+			await fetch(`${WORKER_URL}/api/register-visit`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'x-user-id': userId
+				},
+				body: JSON.stringify({ 
+					role: role,
+					userAgent: navigator.userAgent 
+				})
+			});
+		} catch (e) {
+			console.error("Visit registration failed", e);
+		}
+	}
 </script>
 <script>
 	(function() {
