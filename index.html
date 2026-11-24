@@ -1999,9 +1999,12 @@ function acceptHelp() {
 	}
 
 	function closeWelcome() {
-		const modal = document.getElementById('welcomeModal');
+		const modal = document.querySelector('.welcome-overlay');
 		if (modal) {
 			modal.classList.add('hidden');
+			setTimeout(() => {
+				modal.style.display = "none";
+			}, 500);
 			localStorage.setItem('welcomeSeasonKey', getCurrentSeasonId());
 		}
 	}
