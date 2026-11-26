@@ -1579,7 +1579,7 @@ function acceptHelp() {
 			return "🔌 **Сервер недоступний.** Не вдалося зв'язатися з обробником.";
 		}
 
-		return `⚠️ **Помилка:** ${jsError.message || "Невідома помилка"}. Спробуйте оновити сторінку.`;
+		return `⚠️ **Помилка:** ${jsError.message || "Невідома помилка"}. Або спробуйте оновити сторінку.`;
 	}
 
 	async function handleSend() {
@@ -1708,8 +1708,9 @@ function acceptHelp() {
 				if (document.getElementById('ai-loading-indicator')) {
 					document.getElementById('ai-loading-indicator').remove();
 				}
-				const detailedError = await getDetailedErrorMessage(new Error("Server Error"), data);
+				const detailedError = await getDetailedErrorMessage(new Error("Server Error. Щоденний ліміт бюджету автора вичерпано."), data);
 				histories[currentRole].push({ type: 'ai', content: detailedError });
+				renderMessages();
 				consecutiveErrors++;
 				if (consecutiveErrors >= 2) {
 					const displayMessage = `💡 **Порада від системи:** Оскільки сервіс тимчасово нестабільний, ви можете зробити запит безпосередньо до [Google Gemini](https://gemini.google.com/), скопіювавши текст нижче:\n\n`;
