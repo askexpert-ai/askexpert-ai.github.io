@@ -1579,7 +1579,7 @@ function acceptHelp() {
 			return "🔌 **Сервер недоступний.** Не вдалося зв'язатися з обробником.";
 		}
 
-		return `⚠️ **Помилка:** ${jsError.message || "Невідома помилка"}. Або спробуйте оновити сторінку.`;
+		return `⚠️ **Помилка:** ${jsError.message || "Невідома помилка"}. Або спробуйте надіслати запитання знову, або оновити сторінку.`;
 	}
 
 	async function handleSend() {
@@ -1708,7 +1708,7 @@ function acceptHelp() {
 				if (document.getElementById('ai-loading-indicator')) {
 					document.getElementById('ai-loading-indicator').remove();
 				}
-				const detailedError = await getDetailedErrorMessage(new Error("Server Error. Щоденний ліміт бюджету автора вичерпано."), data);
+				const detailedError = await getDetailedErrorMessage(new Error("Server Error. Щоденний ліміт бюджету сервісу вичерпано. Або, можливо, автор сервісу не заплатив за сервіс, бо помер, у нього було дуже хворе серце."), data);
 				histories[currentRole].push({ type: 'ai', content: detailedError });
 				renderMessages();
 				consecutiveErrors++;
