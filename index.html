@@ -2047,7 +2047,7 @@ function acceptHelp() {
 		}
 	}
 
-	function initMiniWeather() {
+	async function initMiniWeather() {
 		const container = document.getElementById('season-weather-mini');
 		if (!container) return;
 
@@ -2060,43 +2060,57 @@ function acceptHelp() {
 
 		document.body.setAttribute('data-season', season);
 		container.innerHTML = '';
+		
+		const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+		
+		const PHI = 0.618033988749895;
 
 		function randomizeAndStart(p, isFirstTime = false) {
+		
+		    let iteration = parseInt(p.dataset.iteration || "1");
+				
 			p.style.animation = 'none';
 			void p.offsetWidth;
 
-			p.style.left = (Math.random() * 98) + '%';
+        const index = iteration * PHI;
+		
+			p.style.left = ((index * PHI) % 1) * 98 + '%';
 			
 			let duration, animName;
 			if (isSummerRain) {
 				animName = 'miniRainFall';
-				duration = (1.5 + Math.random() * 1.0) + 's';
+				duration = (1.5 + ((index * PHI) % 1) * 1.0) + 's';
 			} else {
 				animName = 'miniFall';
-				duration = (6 + Math.random() * 3) + 's';
-				p.style.fontSize = (0.5625 + Math.random() * 0.0625) + 'rem';
+				duration = 6 + ((index * PHI) % 1) * 3 + 's';
+				p.style.fontSize = (0.5625 + ((index * PHI) % 1) * 0.0625) + 'rem';
 			}
 
-			const delay = isFirstTime ? (Math.random() * 25) + 's' : '0s';
+			const delay = isFirstTime ? (isSummerRain ? ((index * PHI) % 1) * 3 + 's' : ((index * PHI) % 1) * 7 + 's') : '0s';
 			
 			p.style.animation = `${animName} ${duration} linear ${delay} infinite`;
+			
+			p.dataset.iteration = iteration + 1;
 		}
 
-		const particleCount = (isSummerRain || isWinterSnow) ? 50 : 25; 
+		const particleCount = (isSummerRain || isWinterSnow) ? 75 : 25; 
 
 		for (let i = 0; i < particleCount; i++) {
 			const p = document.createElement('div');
 			p.className = 'mini-particle';
 			
+			p.dataset.iteration = i; 
+			
 			if (isSummerRain) {
 				p.innerHTML = `<svg width="2" height="12" viewBox="0 0 2 12"><rect width="1.2" height="12" rx="0.6" fill="#3498db" opacity="0.6" /></svg>`;
 			} else {
-				p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+				p.innerText = symbols[Math.floor(((i * Math.SQRT2) % 1) * symbols.length)];
 			}
 
-			randomizeAndStart(p, true);
-			p.addEventListener('animationiteration', () => randomizeAndStart(p, false));
+			randomizeAndStart(p, i, true);
+			p.addEventListener('animationiteration', () => randomizeAndStart(p, i, false));
 			container.appendChild(p);
+			await sleep(50);
 		}
 	}
 
